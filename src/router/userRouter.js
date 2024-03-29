@@ -23,7 +23,7 @@ function businessRouter(app) {
         const response = await userServ.createUser(req.body);
         response.success
             ? Responsee(res, 201, true, "Usuario creado correctamente", { user: response.user })
-            : errorResponse(res, response);
+            : errorResponse(res, response.error.message);
     });
 
 
