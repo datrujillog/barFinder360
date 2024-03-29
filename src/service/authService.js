@@ -57,7 +57,7 @@ class AuthService {
             }));
 
             //Aactualizar el negocio con el rol
-            const businessUpdate = await db.collection('bar_business').updateOne({ _id: insertedData[0]._id }, { $set: { rolId: rol.insertedId } })
+            await db.collection('bar_business').updateOne({ _id: insertedData[0]._id }, { $set: { rolId: rol.insertedId } })
             
             
             const user = await db.collection('bar_users').insertMany([{
