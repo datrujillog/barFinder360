@@ -7,8 +7,9 @@ import cookie from "cookie-parser";
 
 
 //importar las rutas 
-// import Auth from "./routes/authRouter.js";
-// import User from "./routes/userRouter.js";
+import Auth from "./src/router/authRouter.js";
+import Business from "./src/router/businessRouter.js";
+import User from "./src/router/userRouter.js";
 // import Rol from "./routes/rolRouter.js";
 
 
@@ -22,8 +23,9 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookie());
 
 //utilizar rutas
-// Auth(app);
-// User(app);
+Auth(app);
+Business(app);
+User(app);
 // Rol(app);
 
 //middleware de errores
