@@ -36,16 +36,19 @@ class UserService {
         try {
             const dataToken = extractDataFromToken(token);
 
-            //!validar que solo pueda crear usuarios si es un negocio el que esta creando 
-            
+            //!validar que solo pueda crear usuarios si es un negocio el que esta creando             
 
-            const business = await this.businessServ.businessById(data.businessId);
-            if (!business.success) throw new Error('Business not found');
+            // const business = await this.businessServ.businessById(data.businessId);
+            // if (!business.success) throw new Error('Business not found');
+
+            // if(dataToken.id != business.business[0].id){
+            //     throw new Error('You are not authorized to create users');
+            // }
 
 
-            console.log(business[0]);
 
             const db = await main();
+            data.businessId = dataToken.id;
             const user = await db.collection('bar_users').insertMany([data])
 
             const insertedIds = user.insertedIds;
