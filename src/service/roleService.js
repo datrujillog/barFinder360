@@ -14,7 +14,7 @@ class RoleService {
             const dataToken = extractDataFromToken(token);
 
             const db = await main();
-            data.rolId = dataToken.id;
+            data.userId = dataToken.id;
             const role = await db.collection('bar_rol').insertOne(data)
             return {
                 success: true,
