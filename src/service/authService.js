@@ -25,7 +25,6 @@ class AuthService {
             if (!isMatch) {
                 return { success: false, error: 'Invalid password' };
             }
-
             const token = await createToken(user.user[0]);
             const result = user.user[0];
             return {
@@ -33,10 +32,9 @@ class AuthService {
                 result,
                 token: `Bearer ${token}`
             };
-            
+
         } catch (error) {
             return { success: false, error: error };
-            // throw error;
         }
     }
 
