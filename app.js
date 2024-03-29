@@ -10,7 +10,7 @@ import cookie from "cookie-parser";
 import Auth from "./src/router/authRouter.js";
 import Business from "./src/router/businessRouter.js";
 import User from "./src/router/userRouter.js";
-// import Rol from "./routes/rolRouter.js";
+import Rol from "./src/router/roleRouter.js";
 
 
 
@@ -26,7 +26,7 @@ app.use(cookie());
 Auth(app);
 Business(app);
 User(app);
-// Rol(app);
+Rol(app);
 
 //middleware de errores
 app.use((error, req, res, next) => {
