@@ -70,7 +70,7 @@ class AuthService {
                 rolId: rol.insertedId
             }]) 
             // actualizar la tabla  roles con el id del usuario
-            await db.collection('bar_rol').updateOne({ _id: rol.insertedId }, { $set: { userId: user.insertedIds[0] } })        
+            await db.collection('bar_rol').updateOne({ _id: rol.insertedId }, { $set: { userId: user.insertedIds[0], businessId: business.insertedIds[0] } })        
             
             const token = await createToken(insertedData[0]);
             delete insertedData[0].password;

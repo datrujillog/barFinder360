@@ -1,6 +1,9 @@
 
 import { ObjectId } from "bson";
 import main from "../database/db.js";
+import { BadRequest } from "../middleware/errors.js";
+
+
 
 class BusinessService {
     constructor() {
@@ -45,22 +48,73 @@ class BusinessService {
     }
 
     async businessById(businessId) {
-        try {
-            const db = await main();
-            const business = await db.collection('bar_business').find({ _id: new ObjectId(businessId) }).toArray();
+        // try {
+        //         const db = await main();
+                // const business = await db.collection('bar_business').find({ _id: new ObjectId(businessId) }).toArray();
 
-            if (business.length === 0) {
-                throw new Error('Business not found'); 
+        //         if (business.length === 0) {
+        //             throw new Error('Business not found'); 
+        //         }
+
+        //         return {
+        //             success: true,
+        //             business
+        //         };
+
+        //     } catch (error) {
+        //         return { success: false, error };
+        //     }
+
+        const db = await main();
+
+        const dataUser = await db.collection('bar_business').aggregate([
+            {
+                $match: {
+                    _id: new ObjectId(businessId)
+                }
+            },            
+            {
+                $lookup: {  //  esta linea de codigo es para hacer un join con la tabla de usuarios
+                    from: 'bar_users',
+                    localField: '_id',
+                    foreignField: 'businessId',
+                    as: 'users'
+                }
+            },
+            {
+                $lookup: {
+                    from: 'bar_rol',
+                    localField: '_id',
+                    foreignField: 'businessId',
+                    as: 'roles'
+                }
             }
 
-            return {
-                success: true,
-                business
-            };
+        ]).toArray();
 
-        } catch (error) {
-            return { success: false, error };
+        if (dataUser.length === 0) {
+            throw new BadRequest("usuario no existe", "usuarioNoExiste")
         }
+        let userData = dataUser[0];
+        delete userData['password'];
+
+        return {
+            success: true,
+            business: userData
+        };
+
+
+
+
+
+
+
+
+
+
+
+
+
     }
 
 }
