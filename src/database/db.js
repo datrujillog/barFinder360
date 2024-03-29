@@ -1,11 +1,11 @@
 import { MongoClient } from 'mongodb';
+import config from '../config/config.js';
 
-// const url = 'mongodb://localhost:27017';
-const url = 'mongodb://mongodb:27017';
-const client = new MongoClient(url);
-// mongodb://mongodb:27017/barFinderDocker
+
+const client = new MongoClient(config.urlMongodb);
+
 // Database Name
-const dbName = 'barFinderDocker';
+const dbName = 'barFinder';
 
 
 async function main() {
