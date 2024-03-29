@@ -35,30 +35,24 @@ function authRouter(app) {
 
 
 
-
-
-
-
-
-
-
-
     router.post("/signup", async (req, res) => {
-        // try {
         const data = req.body;
         console.log(data)
         const response = await authServ.signup(data);
 
-        response.success ? res.status(201).json({ response }) : res.status(400).json({ response });
-
-
-
-
-        // res.status(201).json(response);
-        // } catch (error) {
-        //     res.status(400).json({ message: error.message });
-        // }
+        response.success
+            ? Responsee(res, 201, true, "User created", {
+                payload: response.data,
+                token: response.token,
+            })
+            : errorResponse(res, response.error);
     });
+
+
+
+
+
+        
 
 }
 
