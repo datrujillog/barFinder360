@@ -28,9 +28,28 @@ class BusinessService {
             const db = await main();
             const business = await db.collection('business').find({ email: data }).toArray();
 
-            if(business.length === 0){
+            if (business.length === 0) {
                 throw new Error('Business not found');
                 // return { success: false, error: 'Business not found' };
+            }
+
+            return {
+                success: true,
+                business
+            };
+
+        } catch (error) {
+            return { success: false, error };
+        }
+    }
+
+    async businessById(businessId) {
+        try {
+            const db = await main();
+            const business = await db.collection('business').find({ _id: ObjectId(businessId) }).toArray();
+
+            if (business.length === 0) {
+                throw new Error('Business not found');
             }
 
             return {
