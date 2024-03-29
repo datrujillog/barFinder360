@@ -13,7 +13,6 @@ class BusinessService {
     async getBusinesses() {
 
         try {
-            const db = await main();
             const businesses = await db.collection('bar_business').find().toArray();
             const cout = await db.collection('bar_business').find().count();
             return {
@@ -29,7 +28,6 @@ class BusinessService {
 
     async byEmailBusiness(data) {
         try {
-            const db = await main();
             const business = await db.collection('bar_business').find({ email: data }).toArray();
 
             if (business.length === 0) {
@@ -78,7 +76,12 @@ class BusinessService {
             throw new BadRequest("usuario no existe", "usuarioNoExiste")
         }
         let userData = dataUser[0];
+        let roles = userData.roles[0];
+        let users = userData.users[0];
+
         delete userData['password'];
+        delete roles['password'];
+        delete users['password'];
 
         return {
             success: true,
