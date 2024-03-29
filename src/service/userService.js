@@ -16,7 +16,6 @@ class UserService {
 
             if (user.length === 0) {
                 throw new Error('User not found');
-                // return { success: false, error: 'User not found' };
             }
 
             return {
