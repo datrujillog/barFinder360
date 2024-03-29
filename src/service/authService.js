@@ -58,16 +58,18 @@ class AuthService {
 
             //Aactualizar el negocio con el rol
             const businessUpdate = await db.collection('bar_business').updateOne({ _id: insertedData[0]._id }, { $set: { rolId: rol.insertedId } })
-
+            
+            
             const user = await db.collection('bar_users').insertMany([{
                 name: insertedData[0].name,
                 lastname: insertedData[0].lastName,
                 email: insertedData[0].email,
                 password: insertedData[0].password,
                 phone: insertedData[0].phone,
-                business_id: insertedData[0]._id
-            }])
-
+                business_id: insertedData[0]._id,
+                rolId: rol.insertedId
+            }])              
+            
             const token = await createToken(insertedData[0]);
             delete insertedData[0].password;
             console.log('insertedData', insertedData);
