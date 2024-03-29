@@ -40,18 +40,24 @@ class AuthService {
 
     async signup(data) {
         try {
+            const db = await main();
+
             if (data.password) {
                 data.password = await encryptPassword(data.password);
             }
 
-            const db = await main();
-            const business = await db.collection('business').insertMany([data])
+            const rol = await db.collection('bar_rol').insertOne({ name: 'ADMIN' })
+
+            const business = await db.collection('bar_business').insertMany([data])
 
             const insertedIds = business.insertedIds;
             const insertedData = Object.keys(insertedIds).map(key => ({
                 _id: insertedIds[key],
                 ...data
             }));
+
+            //Aactualizar el negocio con el rol
+            const businessUpdate = await db.collection('bar_business').updateOne({ _id: insertedData[0]._id }, { $set: { rolId: rol.insertedId } })
 
             const user = await db.collection('bar_users').insertMany([{
                 name: insertedData[0].name,
