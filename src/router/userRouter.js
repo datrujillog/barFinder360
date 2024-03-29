@@ -5,7 +5,8 @@ import BusinessService from "../service/businessService.js";
 import UserService from "../service/userService.js";
 
 
-// import { errorResponse, authResponse, Responsee } from "../helpers/response.js";
+import { authResponse, errorResponse, Responsee } from "../helper/response.js";
+
 // import { valitorUserSignup } from "../middleware/express-validator.js";
 
 function businessRouter(app) {
@@ -18,16 +19,11 @@ function businessRouter(app) {
     app.use("/api/user", router);
 
     router.post("/create", async (req, res) => {
-        try {
-            const response = await userServ.createUser(req.body);
 
-            response.success
-                ? res.status(201).json({ message: "Business created", data: response.business })
-                : res.status(400).json({ message: "Business not created", error: response.error });
-
-        } catch (error) {
-            res.status(500).send(error);
-        }
+        const response = await userServ.createUser(req.body);
+        response.success
+            ? Responsee(res, 201, true, "Usuario creado correctamente", { user: response.user })
+            : errorResponse(res, response);
     });
 
 
