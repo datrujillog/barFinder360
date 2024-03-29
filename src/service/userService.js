@@ -36,7 +36,7 @@ class UserService {
         try {
             const dataToken = extractDataFromToken(token);
 
-            //!validar que solo pueda crear usuarios si es un negocio el que esta creando             
+            //!validar que solo pueda crear usuarios si es un negocio el que esta creando              
 
             // const business = await this.businessServ.businessById(data.businessId);
             // if (!business.success) throw new Error('Business not found');
