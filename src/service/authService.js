@@ -1,5 +1,5 @@
 
-import main from "../database/db.js";
+import db from "../database/db.js";
 import { encryptPassword, comparePassword } from "../helper/encrypt.js";
 import { createToken } from "../helper/createToken.js";
 import BusinessService from "./businessService.js";
@@ -40,7 +40,6 @@ class AuthService {
 
     async signup(data) {
         try {
-            const db = await main();
 
             if (data.password) {
                 data.password = await encryptPassword(data.password);
