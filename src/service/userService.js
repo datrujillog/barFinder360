@@ -1,14 +1,14 @@
 import main from "../database/db.js";
 import { extractDataFromToken } from "../helper/auth.js";
 import BusinessService from "./businessService.js";
-
-
+import RoleService from "./roleService.js";
 
 
 class UserService {
     constructor() {
         console.log("userService constructor");
         this.businessServ = new BusinessService();
+        this.roleServ = new RoleService();
     }
 
     async byEmailUser(data) {
@@ -31,19 +31,22 @@ class UserService {
     }
 
 
-    //! solo el negocio que inicio sesion puede crear usuarios
     async createUser(data, token) {
         try {
             const dataToken = extractDataFromToken(token);
 
-            //!validar que solo pueda crear usuarios si es un negocio el que esta creando              
 
-            // const business = await this.businessServ.businessById(data.businessId);
-            // if (!business.success) throw new Error('Business not found');
+            const business = await this.businessServ.businessById(dataToken.businessId);
+            if (!business.success) throw new Error('Business not found');
 
-            // if(dataToken.id != business.business[0].id){
-            //     throw new Error('You are not authorized to create users');
-            // }
+            const role = await this.roleServ.roleById(dataToken.rol);
+            if (!role.success) throw new Error('Role not found');
+
+            //!validar que solo pueda crear usuarios si el rol tiene permisos de crear usuarios     
+
+
+
+            console.log(role.role[0].name);
 
 
             const db = await main();
