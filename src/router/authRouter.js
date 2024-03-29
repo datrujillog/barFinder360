@@ -25,8 +25,8 @@ function authRouter(app) {
                 expires: new Date(Date.now() + 1000 * 60 * 60 * 24), // 1 day
                 secure: false,
             }) &&
-            Responsee(res, 201, true, "loggud", {
-                payload: response.data,
+            authResponse(res, 201, true, "loggud", {
+                payload: response.result,
                 token: response.token,
             })
             : errorResponse(res, response.error);
