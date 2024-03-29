@@ -1,5 +1,5 @@
 import main from "../database/db.js";
-
+import BusinessService from "./businessService.js";
 
 
 
@@ -7,6 +7,7 @@ import main from "../database/db.js";
 class UserService {
     constructor() {
         console.log("userService constructor");
+        this.businessServ = new BusinessService();
     }
 
     async byEmailUser(data) {
@@ -31,6 +32,12 @@ class UserService {
 
     async createUser(data) {
         try {
+            console.log(data); 
+            
+            const business = await this.businessServ.businessById(data.businessId);
+
+            console.log(business);
+
             const db = await main();
             const user = await db.collection('bar_users').insertMany([data])
 
