@@ -34,7 +34,7 @@ function authRouter(app) {
 
     router.post("/signup", async (req, res) => {
         const data = req.body;
-        console.log(data)
+        // console.log(data)
         const response = await authServ.signup(data);
 
         response.success
