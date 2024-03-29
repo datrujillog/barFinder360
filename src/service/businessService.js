@@ -11,8 +11,8 @@ class BusinessService {
 
         try {
             const db = await main();
-            const businesses = await db.collection('business').find().toArray();
-            const cout = await db.collection('business').find().count();
+            const businesses = await db.collection('bar_business').find().toArray();
+            const cout = await db.collection('bar_business').find().count();
             return {
                 success: true,
                 cout,
@@ -27,7 +27,7 @@ class BusinessService {
     async byEmailBusiness(data) {
         try {
             const db = await main();
-            const business = await db.collection('business').find({ email: data }).toArray();
+            const business = await db.collection('bar_business').find({ email: data }).toArray();
 
             if (business.length === 0) {
                 throw new Error('Business not found');
@@ -47,7 +47,7 @@ class BusinessService {
     async businessById(businessId) {
         try {
             const db = await main();
-            const business = await db.collection('business').find({ _id: new ObjectId(businessId) }).toArray();
+            const business = await db.collection('bar_business').find({ _id: new ObjectId(businessId) }).toArray();
 
             if (business.length === 0) {
                 throw new Error('Business not found'); 
