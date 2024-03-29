@@ -4,10 +4,11 @@ import config from "../config/config.js";
 
 export const createToken = (user) => {
     try {
-        console.log(user)
+        // console.log(user)
         const token = jwt.sign({
             id: user._id,
             email: user.email,
+            businessId: user.business_id,
             rol: user.rolId
         }, config.jwtSecret, {
             expiresIn: '1h'
