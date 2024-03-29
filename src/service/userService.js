@@ -31,18 +31,17 @@ class UserService {
     }
 
 
+    //! solo el negocio que inicio sesion puede crear usuarios
     async createUser(data, token) {
         try {
-            console.log(token); 
-
             const dataToken = extractDataFromToken(token);
 
-            console.log(dataToken); 
+            //!validar que solo pueda crear usuarios si es un negocio el que esta creando 
             
-            
-            const business = await this.businessServ.businessById(data.businessId); 
-            if(!business.success) throw new Error('Business not found');
-            
+
+            const business = await this.businessServ.businessById(data.businessId);
+            if (!business.success) throw new Error('Business not found');
+
 
             console.log(business[0]);
 
