@@ -1,8 +1,8 @@
 import { MongoClient } from 'mongodb';
-import config from '../config/config.js';
+import configS from '../config/config.js';
 
 
-const client = new MongoClient(config.urlMongodb);
+const client = new MongoClient(configS.urlMongodb);
 
 // Database Name
 const dbName = 'barFinder';
@@ -22,8 +22,12 @@ async function main() {
         return db;
 
     } catch (error) {
-        // console.error('Error connecting to the database', error);
+        console.error('Error connecting to the database', error);
     }
+
+
 }
 
-export default main
+const db = await main();
+
+export default db;
