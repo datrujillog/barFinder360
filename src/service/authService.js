@@ -64,6 +64,7 @@ class AuthService {
 
             const token = await createToken(insertedData[0]);
             delete insertedData[0].password;
+            console.log('insertedData', insertedData);
             return {
                 success: true,
                 data: insertedData,
