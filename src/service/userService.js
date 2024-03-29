@@ -46,7 +46,6 @@ class UserService {
             // }
 
 
-
             const db = await main();
             data.businessId = dataToken.id;
             const user = await db.collection('bar_users').insertMany([data])
