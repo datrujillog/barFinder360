@@ -8,7 +8,7 @@ export const createToken = (user) => {
         const token = jwt.sign({
             id: user._id,
             email: user.email,
-            businessId: user.business_id,
+            businessId: user.businessId,
             rol: user.rolId
         }, config.jwtSecret, {
             expiresIn: '1h'
