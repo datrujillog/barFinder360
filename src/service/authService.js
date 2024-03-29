@@ -30,7 +30,7 @@ class AuthService {
             return {
                 success: true,
                 result,
-                token: `Bearer ${token}`
+                token:token
             };
 
         } catch (error) {
