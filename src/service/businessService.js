@@ -1,6 +1,6 @@
 
 import { ObjectId } from "bson";
-import main from "../database/db.js";
+import db from "../database/db.js";
 import { BadRequest } from "../middleware/errors.js";
 
 
@@ -48,7 +48,6 @@ class BusinessService {
     }
 
     async businessById(businessId) {
-        const db = await main();
 
         const dataUser = await db.collection('bar_business').aggregate([
             {
