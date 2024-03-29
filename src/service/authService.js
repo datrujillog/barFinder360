@@ -66,7 +66,7 @@ class AuthService {
                 email: insertedData[0].email,
                 password: insertedData[0].password,
                 phone: insertedData[0].phone,
-                business_id: insertedData[0]._id,
+                businessId: insertedData[0]._id,
                 rolId: rol.insertedId
             }]) 
             // actualizar la tabla  roles con el id del usuario
