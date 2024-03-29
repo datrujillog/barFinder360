@@ -45,8 +45,8 @@ const authResponse = async (res = response, status, ok, message, data) => {
 
 const Responsee = async (res = response, status, ok, message, data) => {
   try {
-    const { payload, token } = data;
-    return res.status(status).json({ ok, message, payload, token });
+    const { user, token } = data;
+    return res.status(status).json({ ok, message, user, token });
   } catch (error) {
     return errorResponse(res, error);
   }
