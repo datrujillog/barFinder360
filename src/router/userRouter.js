@@ -20,7 +20,9 @@ function businessRouter(app) {
 
     router.post("/create", async (req, res) => {
 
-        const response = await userServ.createUser(req.body);
+        const token = req.cookies.token;
+
+        const response = await userServ.createUser(req.body, token);
         response.success
             ? Responsee(res, 201, true, "Usuario creado correctamente", { user: response.user })
             : errorResponse(res, response.error.message);
