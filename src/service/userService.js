@@ -1,4 +1,5 @@
 import main from "../database/db.js";
+import { extractDataFromToken } from "../helper/auth.js";
 import BusinessService from "./businessService.js";
 
 
@@ -30,11 +31,16 @@ class UserService {
     }
 
 
-    async createUser(data) {
+    async createUser(data, token) {
         try {
-            console.log(data); 
+            console.log(token); 
+
+            const dataToken = extractDataFromToken(token);
+
+            console.log(dataToken); 
             
-            const business = await this.businessServ.businessById(data.businessId);
+            
+            const business = await this.businessServ.businessById(data.businessId); 
             if(!business.success) throw new Error('Business not found');
             
 
