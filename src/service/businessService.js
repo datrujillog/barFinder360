@@ -48,23 +48,6 @@ class BusinessService {
     }
 
     async businessById(businessId) {
-        // try {
-        //         const db = await main();
-                // const business = await db.collection('bar_business').find({ _id: new ObjectId(businessId) }).toArray();
-
-        //         if (business.length === 0) {
-        //             throw new Error('Business not found'); 
-        //         }
-
-        //         return {
-        //             success: true,
-        //             business
-        //         };
-
-        //     } catch (error) {
-        //         return { success: false, error };
-        //     }
-
         const db = await main();
 
         const dataUser = await db.collection('bar_business').aggregate([
@@ -72,7 +55,7 @@ class BusinessService {
                 $match: {
                     _id: new ObjectId(businessId)
                 }
-            },            
+            },
             {
                 $lookup: {  //  esta linea de codigo es para hacer un join con la tabla de usuarios
                     from: 'bar_users',
