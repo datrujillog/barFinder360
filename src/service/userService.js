@@ -35,8 +35,10 @@ class UserService {
             console.log(data); 
             
             const business = await this.businessServ.businessById(data.businessId);
+            if(!business.success) throw new Error('Business not found');
+            
 
-            console.log(business);
+            console.log(business[0]);
 
             const db = await main();
             const user = await db.collection('bar_users').insertMany([data])
