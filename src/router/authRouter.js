@@ -32,9 +32,6 @@ function authRouter(app) {
             : errorResponse(res, response.error);
     });
 
-
-
-
     router.post("/signup", async (req, res) => {
         const data = req.body;
         console.log(data)
