@@ -1,4 +1,5 @@
 
+import { ObjectId } from "bson";
 import main from "../database/db.js";
 
 class BusinessService {
@@ -46,10 +47,10 @@ class BusinessService {
     async businessById(businessId) {
         try {
             const db = await main();
-            const business = await db.collection('business').find({ _id: ObjectId(businessId) }).toArray();
+            const business = await db.collection('business').find({ _id: new ObjectId(businessId) }).toArray();
 
             if (business.length === 0) {
-                throw new Error('Business not found');
+                throw new Error('Business not found'); 
             }
 
             return {
