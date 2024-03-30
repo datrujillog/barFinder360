@@ -1,11 +1,13 @@
 
-import express, { response } from "express";
+import express, { query, response } from "express";
 
 import BusinessService from "../service/businessService.js";
 import UserService from "../service/userService.js";
 
 
 import { authResponse, errorResponse, Responsee } from "../helper/response.js";
+import { BadRequest, NotFound } from "../middleware/errors.js";
+import { extractDataFromToken } from "../helper/auth.js";
 
 // import { valitorUserSignup } from "../middleware/express-validator.js";
 
@@ -19,8 +21,12 @@ function businessRouter(app) {
     app.use("/api/user", router);
 
     router.post("/create", async (req, res) => {
-
+        // estoy enviado en postman el businessId por el headers 
+        const businessId  = req.headers.businessid; 
         const token = req.cookies.token;
+        const dataToken = await extractDataFromToken(token)
+
+        console.log(dataToken.id) 
 
         const response = await userServ.createUser(req.body, token);
         response.success
