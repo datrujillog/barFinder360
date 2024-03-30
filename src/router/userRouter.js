@@ -26,7 +26,7 @@ function businessRouter(app) {
         const token = req.cookies.token;
         const dataToken = await extractDataFromToken(token)
         try {
-            if(dataToken.id !== businessId) throw new BadRequest('Error de autenticacion')            
+            if(dataToken.businessId !== businessId) throw new BadRequest('Error de autenticacion')            
         } catch (error) {
             return errorResponse(res, error.message)
             
