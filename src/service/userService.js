@@ -1,3 +1,6 @@
+import { ObjectId } from "bson";
+
+
 import db from "../database/db.js";
 import { extractDataFromToken } from "../helper/auth.js";
 import { BadRequest } from "../middleware/errors.js";
@@ -42,18 +45,12 @@ class UserService {
             if (!business.success) throw new Error('Business not found');
 
             const role = await this.roleServ.roleById(dataToken.rol);
-            if (!role.success) throw new Error('Role not found');
+            if (!role.success) throw new BadRequest(role.error);
 
-            //!validar que solo pueda crear usuarios si el rol tiene permisos de crear usuarios     
-
-
-
-            console.log(role.role[0].name);
-
-
-            const db = await main();
-            data.businessId = dataToken.id;
-            const user = await db.collection('bar_users').insertMany([data])
+            data.businessId = new ObjectId(dataToken.businessId);
+            data.roleId = new ObjectId(data.roleId);
+            const user = await db.collection('bar_users').insertMany([data]);
+            // const user = await db.collection('bar_users').insertMany([{data,businessId:new ObjectId(businessId) }]);
 
             const insertedIds = user.insertedIds;
             const insertedData = Object.keys(insertedIds).map(key => ({
