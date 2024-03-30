@@ -62,7 +62,7 @@ class RoleService {
     async createPlantillas() {
         try {
 
-            console.log(plantillaRolAdmin)
+            // console.log(plantillaRolAdmin)
             await db.collection('bar_roleConfigutation').insertMany([plantillaRolAdmin])
             await db.collection('bar_roleConfigutation').insertMany([plantillaRolUser])
             await db.collection('bar_roleConfigutation').insertMany([plantillaRolSuperUser])
