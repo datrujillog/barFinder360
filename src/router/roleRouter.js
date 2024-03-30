@@ -28,7 +28,6 @@ function businessRouter(app) {
             return errorResponse(res, error.message)
             
         }
-
         const response = await roleServ.createRole(req.body, token);
         response.success
             ? Responsee(res, 201, true, "Rol creado correctamente", { user: response.user })
