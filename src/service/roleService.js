@@ -1,8 +1,9 @@
 
 import { ObjectId } from "bson";
 
-import main from "../database/db.js";
+import db from "../database/db.js";
 import { extractDataFromToken } from "../helper/auth.js";
+import { BadRequest } from "../middleware/errors.js";
 
 
 
@@ -15,8 +16,8 @@ class RoleService {
         try {
             const dataToken = extractDataFromToken(token);
 
-            const db = await main();
-            data.userId = dataToken.id;
+            // data.userId = dataToken.id;
+            data.businessId = new ObjectId(dataToken.businessId);
             const role = await db.collection('bar_rol').insertOne(data)
             return {
                 success: true,
@@ -35,13 +36,12 @@ class RoleService {
 
         try {
             // buscar el id del rol en la base de datos
-            const db = await main();
             const role = await db.collection('bar_rol').find({ _id: new ObjectId(roleId) }).toArray();
 
             console.log(role);
 
             if (role.length === 0) {
-                throw new Error('Role not found');
+                throw new BadRequest('Role not found');
             }
 
             return {
