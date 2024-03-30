@@ -50,7 +50,6 @@ class UserService {
             data.businessId = new ObjectId(dataToken.businessId);
             data.roleId = new ObjectId(data.roleId);
             const user = await db.collection('bar_users').insertMany([data]);
-            // const user = await db.collection('bar_users').insertMany([{data,businessId:new ObjectId(businessId) }]);
 
             const insertedIds = user.insertedIds;
             const insertedData = Object.keys(insertedIds).map(key => ({
