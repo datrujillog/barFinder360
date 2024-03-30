@@ -1,5 +1,6 @@
-import main from "../database/db.js";
+import db from "../database/db.js";
 import { extractDataFromToken } from "../helper/auth.js";
+import { BadRequest } from "../middleware/errors.js";
 import BusinessService from "./businessService.js";
 import RoleService from "./roleService.js";
 
@@ -13,11 +14,11 @@ class UserService {
 
     async byEmailUser(data) {
         try {
-            const db = await main();
             const user = await db.collection('bar_users').find({ email: data }).toArray();
 
             if (user.length === 0) {
-                throw new Error('User not found');
+                throw new BadRequest('El Email no existe');
+
             }
 
             return {
