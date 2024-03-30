@@ -4,6 +4,7 @@ import { encryptPassword, comparePassword } from "../helper/encrypt.js";
 import { createToken } from "../helper/createToken.js";
 import BusinessService from "./businessService.js";
 import UserService from "./userService.js";
+import { BadRequest } from "../middleware/errors.js";
 
 
 class AuthService {
@@ -19,7 +20,8 @@ class AuthService {
 
 
             const user = await this.UserServ.byEmailUser(data.email);
-            if (!user.success) throw 'User no found';
+            // if (!user.success) throw new BadRequest('User not found')
+
 
             const isMatch = await comparePassword(data.password, user.user[0].password);
             if (!isMatch) {
