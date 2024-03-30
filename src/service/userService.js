@@ -50,8 +50,6 @@ class UserService {
             data.businessId = new ObjectId(dataToken.businessId);
             data.roleId = new ObjectId(data.roleId);
 
-            console.log(data.roleId)
-            //! verificar si el data.roleId existe en la base de datos de roles
             const roleExist = await this.roleServ.roleById(data.roleId);
             if (!roleExist.success) throw new BadRequest(roleExist.error);  
 
