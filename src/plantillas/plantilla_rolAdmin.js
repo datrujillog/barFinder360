@@ -1,5 +1,5 @@
 
-{
+const plantillaRolAdmin = {
     "name": "plantilla administrador",
     "type": "admin",
     "defaulUser": false,
@@ -32,3 +32,5 @@
     },
     "accessTo": []
 }
+
+export default plantillaRolAdmin;

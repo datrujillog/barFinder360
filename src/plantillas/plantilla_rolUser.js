@@ -1,15 +1,15 @@
 
-{
-    "name": "plantilla administrador",
-    "type": "admin",
-    "defaulUser": false,
-    "defalultAdmin": true,
-    "authorizations": {
+const plantillaRolUser = {
+    "name": "planilla User",
+    "type": "User",
+    "defauldUser": true,
+    "defauldAdmin": false,
+    "authorization": {
         "moduleApp": {
             "accessModule": {
                 "showModule": true
             },
-            "users": {
+            "personalInformation": {
                 "accessModule": {
                     "showModule": true
                 },
@@ -18,17 +18,14 @@
                     "r": true,
                     "u": true,
                     "d": true
-                },
-                "personalInformation": {
-                    "access": {
-                        "c": true,
-                        "r": true,
-                        "u": true,
-                        "d": true
-                    }
                 }
+
             }
         }
     },
     "accessTo": []
 }
+
+
+
+export default plantillaRolUser;

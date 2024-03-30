@@ -1,10 +1,14 @@
 
-import { ObjectId } from "bson";
-
+// import { ObjectId } from "bson";
+// const ObjectId = require('mongodb').ObjectId;
+import {ObjectId} from 'mongodb';
 import db from "../database/db.js";
 import { extractDataFromToken } from "../helper/auth.js";
 import { BadRequest } from "../middleware/errors.js";
-
+import plantillaRolAdmin from '../plantillas/plantilla_rolAdmin.js'
+import plantillaRolUser from '../plantillas/plantilla_rolUser.js'
+import plantillaRolSuperUser from '../plantillas/plantilla_rolSuperUser.js'
+// import plantillaRolAdmin from '../plantillas/plantilla_rolAdmin.json'
 
 
 class RoleService {
@@ -50,6 +54,22 @@ class RoleService {
             };
 
 
+        } catch (error) {
+            return { success: false, error: error };
+        }
+    }
+
+    async updatePlantillas(data) {
+        try {
+
+            console.log(plantillaRolAdmin)
+            await db.collection('bar_roleConfigutation').insertMany([plantillaRolAdmin])
+            await db.collection('bar_roleConfigutation').insertMany([plantillaRolUser])
+            await db.collection('bar_roleConfigutation').insertMany([plantillaRolSuperUser])
+            return {
+                success: true,
+                
+            }
         } catch (error) {
             return { success: false, error: error };
         }
