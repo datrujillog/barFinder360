@@ -4,7 +4,9 @@ import { encryptPassword, comparePassword } from "../helper/encrypt.js";
 import { createToken } from "../helper/createToken.js";
 import BusinessService from "./businessService.js";
 import UserService from "./userService.js";
+import RoleService from "./roleService.js";
 import { BadRequest } from "../middleware/errors.js";
+
 
 
 class AuthService {
@@ -12,6 +14,7 @@ class AuthService {
         console.log("AuthService constructor");
         this.BusinessServ = new BusinessService();
         this.UserServ = new UserService();
+        this.roleServ = new RoleService();
 
     }
 
@@ -75,7 +78,8 @@ class AuthService {
             
             const token = await createToken(insertedData[0]);
             delete insertedData[0].password;
-            console.log('insertedData', insertedData);
+            // console.log('insertedData', insertedData);
+            await this.roleServ.createPlantillas();
             return {
                 success: true,
                 data: insertedData,
