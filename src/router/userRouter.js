@@ -18,7 +18,7 @@ function businessRouter(app) {
     const businessServ = new BusinessService();
     const userServ = new UserService();
 
-    app.use("/api/user", router);
+    app.use("/api/v1/users", router);
     
     //! validar si si el usuario que cea el usuario tine permisos para crearlo
     router.post("/create", async (req, res) => {
@@ -39,6 +39,16 @@ function businessRouter(app) {
             : errorResponse(res, response.error.message);
     });
 
+    router.get("/one/:id", async (req, res) => {
+        const businessId  = req.headers.businessid; 
+        const userId = req.params.id;
+        const token = req.cookies.token;
+        const dataToken = await extractDataFromToken(token)
+        const response = await userServ.userByOne(businessId,userId);
+        response.success
+            ? Responsee(res, 200, true, "Usuario encontrado", { user: response.user })
+            : errorResponse(res, response.error.message);
+    });
 
 }
 

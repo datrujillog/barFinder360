@@ -1,4 +1,6 @@
-import { ObjectId } from "bson";
+// import { ObjectId } from "bson";
+import { ObjectId } from 'mongodb';
+
 
 
 import db from "../database/db.js";
@@ -48,7 +50,7 @@ class UserService {
             data.businessId = new ObjectId(dataToken.businessId);
             data.roleId = new ObjectId(data.roleId);
             const roleExist = await this.roleServ.roleById(data.roleId);
-            if (!roleExist.success) throw new BadRequest(roleExist.error);  
+            if (!roleExist.success) throw new BadRequest(roleExist.error);
 
             const user = await db.collection('bar_users').insertMany([data]);
             const insertedIds = user.insertedIds;
@@ -66,6 +68,44 @@ class UserService {
         }
 
 
+    }
+
+
+    async userByOne(businessId, userId) {
+        try {
+            const user = await db.collection('bar_users').aggregate([
+                {
+                    $match: {
+                        _id: new ObjectId(userId),
+                        businessId: new ObjectId(businessId)
+                    }
+                },
+                {
+                    $lookup: {
+                        from: 'bar_business',
+                        localField: 'businessId',
+                        foreignField: '_id',
+                        as: 'business'
+                    }
+                },
+                {
+                    $lookup: {
+                        from: 'bar_rol',
+                        localField: 'roleId',
+                        foreignField: '_id',
+                        as: 'role'
+                    }
+                }
+            ]).toArray();
+            
+            if (user.length === 0) throw new BadRequest('El usuario no existe');
+            return {
+                success: true,
+                user
+            };
+        } catch (error) {
+            return { success: false, error };
+        }
     }
 
 }
