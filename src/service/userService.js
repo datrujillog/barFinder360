@@ -39,8 +39,6 @@ class UserService {
     async createUser(data, token) {
         try {
             const dataToken = extractDataFromToken(token);
-
-
             const business = await this.businessServ.businessById(dataToken.businessId);
             if (!business.success) throw new Error('Business not found');
 
@@ -49,13 +47,10 @@ class UserService {
 
             data.businessId = new ObjectId(dataToken.businessId);
             data.roleId = new ObjectId(data.roleId);
-
             const roleExist = await this.roleServ.roleById(data.roleId);
             if (!roleExist.success) throw new BadRequest(roleExist.error);  
 
-
             const user = await db.collection('bar_users').insertMany([data]);
-
             const insertedIds = user.insertedIds;
             const insertedData = Object.keys(insertedIds).map(key => ({
                 _id: insertedIds[key],
