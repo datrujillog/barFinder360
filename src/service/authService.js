@@ -20,7 +20,7 @@ class AuthService {
 
 
             const user = await this.UserServ.byEmailUser(data.email);
-            // if (!user.success) throw new BadRequest('User not found')
+            if (!user.success) throw new BadRequest(user.error); 
 
 
             const isMatch = await comparePassword(data.password, user.user[0].password);
