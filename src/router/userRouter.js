@@ -19,7 +19,8 @@ function businessRouter(app) {
     const userServ = new UserService();
 
     app.use("/api/user", router);
-
+    
+    //! validar si si el usuario que cea el usuario tine permisos para crearlo
     router.post("/create", async (req, res) => {
         // estoy enviado en postman el businessId por el headers 
         const businessId  = req.headers.businessid; 
