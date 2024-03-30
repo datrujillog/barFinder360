@@ -1,12 +1,18 @@
+import log4js from 'log4js'
 
-import db from "../database/db.js";
-import { encryptPassword, comparePassword } from "../helper/encrypt.js";
-import { createToken } from "../helper/createToken.js";
-import BusinessService from "./businessService.js";
 import UserService from "./userService.js";
 import RoleService from "./roleService.js";
+import BusinessService from "./businessService.js";
+
 import { BadRequest } from "../middleware/errors.js";
 
+import db from "../database/db.js";
+
+import { encryptPassword, comparePassword } from "../helper/encrypt.js";
+import { createToken } from "../helper/createToken.js";
+
+
+const log = log4js.getLogger(`${process.env.NODE_ENV} - normalizeData`);
 
 
 class AuthService {
