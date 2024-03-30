@@ -8,7 +8,7 @@ import { BadRequest } from "../middleware/errors.js";
 import plantillaRolAdmin from '../helper/plantillas/plantilla_rolAdmin.js'
 import plantillaRolUser from '../helper/plantillas/plantilla_rolUser.js'
 import plantillaRolSuperUser from '../helper/plantillas/plantilla_rolSuperAdmin.js'
-
+import { parseNewRols } from '../helper/normalizeData.js'
 
 
 class RoleService {
@@ -77,17 +77,20 @@ class RoleService {
 
     async createRoles(dataRoles) {
         let role;
-    
+
         try {
-            const templateType = dataRoles.type === 'Admin' ? 'Admin' : 'User';
+            const templateType = dataRoles.type === 'Admin' ? 'Admin' : dataRoles.type === 'User' ? 'User' : null;
+
             role = await this.getRolesTemplate(templateType);
-    
-            const resp = await this.createRolesAuthorization(dataRoles, role[0].authorizations);
-    
+            if (!role.success) throw new BadRequest(role.error);
+
+            const resp = await this.createRolesAuthorization(dataRoles, role.results[0].authorizations);
+            if (!resp.success) throw new BadRequest(resp.error)
+
             return {
                 success: true,
                 result: resp
-            };
+            }; 
         } catch (error) {
             return {
                 success: false,
@@ -95,22 +98,33 @@ class RoleService {
             };
         }
     }
-    
+
 
 
     async getRolesTemplate(type) {
         try {
             const results = await db.collection('bar_roleConfigutation').find({ type: type }).toArray();
-            return results;
+            if (!results || !results.length) throw new BadRequest('Template not found');
+
+            return {
+                success: true,
+                results
+            };
+
         } catch (error) {
             return { success: false, error: error };
         }
     }
 
-    async createRolsAuthorization(dataRols, authorization) {
+    async createRolesAuthorization(data,objAuthorizationPlantilla) {
         try {
-           
-            const role = await db.collection('bar_rols').insertOne(dataRols)
+
+            const save = await parseNewRols(data, objAuthorizationPlantilla)
+
+            const role = await db.collection('bar_rols').insertOne(save)
+            if (role === null) throw new BadRequest('Error creating role');
+
+
             return {
                 success: true,
                 result: role

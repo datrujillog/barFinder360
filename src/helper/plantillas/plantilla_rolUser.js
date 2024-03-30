@@ -8,20 +8,20 @@ const plantillaRolUser = {
         "moduleApp": {
             "accessModule": {
                 "showModule": true
+            }
+        },
+        "personalInformation": {
+            "accessModule": {
+                "showModule": true
             },
-            "personalInformation": {
-                "accessModule": {
-                    "showModule": true
-                },
-                "access": {
-                    "c": true,
-                    "r": true,
-                    "u": true,
-                    "d": true
-                }
-
+            "access": {
+                "c": true,
+                "r": true,
+                "u": true,
+                "d": true
             }
         }
+
     },
     "accessTo": []
 }

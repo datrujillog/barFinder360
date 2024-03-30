@@ -17,7 +17,7 @@ function businessRouter(app) {
     const roleServ = new RoleService();
 
 
-    app.use("/api/role", router);
+    app.use("/api/v1/role", router);
 
     router.post("/create", async (req, res) => {
         const businessId  = req.headers.businessid; 
@@ -45,6 +45,25 @@ function businessRouter(app) {
             : errorResponse(res, response.error.message);
     
     });
+
+    router.post("/createRoles", async (req, res) => {
+        const businessId  = req.headers.businessid; 
+        const body = req.body;
+        const token = req.cookies.token;
+        const dataToken = await extractDataFromToken(token)
+        // try {
+        //     if(dataToken.businessId !== businessId) throw new BadRequest('Error de autenticacion')            
+        // } catch (error) {
+        //     return errorResponse(res, error.message)
+             
+        // } 
+        if(body === null) throw new BadRequest('Error de autenticacion')
+        const response = await roleServ.createRoles(body);
+        response.success
+            ? Responsee(res, 201, true, "Rol creado correctamente", { user: response.user })
+            : errorResponse(res, response.error);
+    });
+
 
 }  
 
