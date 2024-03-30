@@ -1,14 +1,14 @@
 
-// import { ObjectId } from "bson";
-// const ObjectId = require('mongodb').ObjectId;
-import {ObjectId} from 'mongodb';
+import { ObjectId } from 'mongodb';
+
 import db from "../database/db.js";
+
 import { extractDataFromToken } from "../helper/auth.js";
 import { BadRequest } from "../middleware/errors.js";
-import plantillaRolAdmin from '../plantillas/plantilla_rolAdmin.js'
-import plantillaRolUser from '../plantillas/plantilla_rolUser.js'
-import plantillaRolSuperUser from '../plantillas/plantilla_rolSuperUser.js'
-// import plantillaRolAdmin from '../plantillas/plantilla_rolAdmin.json'
+import plantillaRolAdmin from '../helper/plantillas/plantilla_rolAdmin.js'
+import plantillaRolUser from '../helper/plantillas/plantilla_rolUser.js'
+import plantillaRolSuperUser from '../helper/plantillas/plantilla_rolSuperAdmin.js'
+
 
 
 class RoleService {
@@ -22,7 +22,7 @@ class RoleService {
 
             // data.userId = dataToken.id;
             data.businessId = new ObjectId(dataToken.businessId);
-            const role = await db.collection('bar_rol').insertOne(data)
+            const role = await db.collection('bar_rols').insertOne(data)
             return {
                 success: true,
                 result: role
@@ -68,7 +68,52 @@ class RoleService {
             await db.collection('bar_roleConfigutation').insertMany([plantillaRolSuperUser])
             return {
                 success: true,
-                
+
+            }
+        } catch (error) {
+            return { success: false, error: error };
+        }
+    }
+
+    async createRoles(dataRoles) {
+        let role;
+    
+        try {
+            const templateType = dataRoles.type === 'Admin' ? 'Admin' : 'User';
+            role = await this.getRolesTemplate(templateType);
+    
+            const resp = await this.createRolesAuthorization(dataRoles, role[0].authorizations);
+    
+            return {
+                success: true,
+                result: resp
+            };
+        } catch (error) {
+            return {
+                success: false,
+                error: error.message
+            };
+        }
+    }
+    
+
+
+    async getRolesTemplate(type) {
+        try {
+            const results = await db.collection('bar_roleConfigutation').find({ type: type }).toArray();
+            return results;
+        } catch (error) {
+            return { success: false, error: error };
+        }
+    }
+
+    async createRolsAuthorization(dataRols, authorization) {
+        try {
+           
+            const role = await db.collection('bar_rols').insertOne(dataRols)
+            return {
+                success: true,
+                result: role
             }
         } catch (error) {
             return { success: false, error: error };
