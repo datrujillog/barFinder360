@@ -25,8 +25,12 @@ function businessRouter(app) {
         const businessId  = req.headers.businessid; 
         const token = req.cookies.token;
         const dataToken = await extractDataFromToken(token)
-
-        console.log(dataToken.id) 
+        try {
+            if(dataToken.id !== businessId) throw new BadRequest('Error de autenticacion')            
+        } catch (error) {
+            return errorResponse(res, error.message)
+            
+        }
 
         const response = await userServ.createUser(req.body, token);
         response.success
