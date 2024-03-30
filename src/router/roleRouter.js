@@ -34,6 +34,14 @@ function businessRouter(app) {
             : errorResponse(res, response.error.message);
     });
 
+    router.put("/v1/plantillas", async (req, res) => {
+        const response = await roleServ.updatePlantillas()
+        response.success
+            ? Responsee(res, 201, true, "Rol actualizado correctamente", { user: response.user })
+            : errorResponse(res, response.error.message);
+    
+    });
+
 }  
 
 export default businessRouter;
