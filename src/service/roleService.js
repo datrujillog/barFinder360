@@ -59,7 +59,7 @@ class RoleService {
         }
     }
 
-    async updatePlantillas(data) {
+    async createPlantillas() {
         try {
 
             console.log(plantillaRolAdmin)
