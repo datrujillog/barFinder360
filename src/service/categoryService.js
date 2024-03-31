@@ -34,8 +34,63 @@ class CategoryService {
 
             return {
                 success: true,
-                category:insertedData
-                
+                category: insertedData
+
+            };
+        } catch (error) {
+            return { success: false, error };
+        }
+    }
+
+    async categoryList(businessId) {
+        try {
+            const query = {
+                businessId: new ObjectId(businessId)
+            }
+            const results = await db.collection('bar_categories').find(query).toArray();
+
+
+            console.log(results)
+
+            if (results.length === 0 || results == undefined) throw new Error('Category not found');
+
+
+            return {
+                success: true,
+                category: results
+            };
+        } catch (error) {
+            return { success: false, error };
+        }
+    }
+
+
+    async categoryListById(businessId, categoryId) {
+        try {
+            
+            const results = await db.collection('bar_categories').aggregate([
+                {
+                    $match: {
+                        _id: new ObjectId(categoryId),
+                        businessId: new ObjectId(businessId)                    
+                    }
+                },
+                {
+                    $lookup: {
+                        from: "bar_business",
+                        localField: "businessId",
+                        foreignField: "_id",
+                        as: "business"
+                      }
+                },
+                // { $unwind: '$business' }
+
+            ]).toArray();
+            if (results.length === 0 ) throw new Error('Category not found');
+
+            return {
+                success: true,
+                category: results
             };
         } catch (error) {
             return { success: false, error };
