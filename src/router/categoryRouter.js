@@ -8,6 +8,7 @@ import { BadRequest } from "../middleware/errors.js";
 import { auth, verifyToken } from "../middleware/auth.js";
 
 import { authResponse, errorResponse, Responsee } from "../helper/response.js";
+import validateBusiness from "../helper/valitateBusiness.js";
 
 
 function categoryRouter(app) {
@@ -19,24 +20,25 @@ function categoryRouter(app) {
     app.use("/api/v1/category", router);
     // router.post["get"], "/create", async (req, res, next) => {4
 
-    router.post("/create", async (req, res) => {
-        const businessId = req.headers.businessid;
-        const body = req.body;
-        const token = req.cookies.token;
-        const dataToken = await auth(token)
+    router.post("/create", async (req, res, next) => {
         try {
-            if (dataToken.businessId !== businessId) throw new BadRequest('Error de autenticacion')
-        } catch (error) {
-            return errorResponse(res, error.message)
+            const businessId = req.headers.businessid;
+            const body = req.body;
+            const token = req.cookies.token;
+            const result = await validateBusiness(businessId, token);
+            if(!result.success) throw new BadRequest(result.error.message);
+            
+            const { success, category } = await categoryServ.categoryCreate(businessId, body);
+            success
+                ? authResponse(res, 201, true, "User created", {
+                    payload: category,
+                    token: token,
+                })
+                : errorResponse(res, response.error);
 
+        } catch (error) {
+            errorResponse(res, error.message);
         }
-        const { success, category } = await categoryServ.categoryCreate(businessId, body);
-        success
-            ? authResponse(res, 201, true, "User created", {
-                payload: category,
-                token: token,
-            })
-            : errorResponse(res, response.error);
     });
 
 
