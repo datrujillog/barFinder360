@@ -56,7 +56,7 @@ class AuthService {
                 data.password = await encryptPassword(data.password);
             }
 
-            const rol = await db.collection('bar_rol').insertOne({ name: 'ADMIN' })
+            // const rol = await db.collection('bar_rols').insertOne({ name: 'ADMIN' })
 
             const business = await db.collection('bar_business').insertMany([data])
 
@@ -67,7 +67,7 @@ class AuthService {
             }));
 
             //Aactualizar el negocio con el rol
-            await db.collection('bar_business').updateOne({ _id: insertedData[0]._id }, { $set: { rolId: rol.insertedId } })
+            // await db.collection('bar_business').updateOne({ _id: insertedData[0]._id }, { $set: { rolId: rol.insertedId } })
             
             
             const user = await db.collection('bar_users').insertMany([{
@@ -77,15 +77,15 @@ class AuthService {
                 password: insertedData[0].password,
                 phone: insertedData[0].phone,
                 businessId: insertedData[0]._id,
-                rolId: rol.insertedId
+                // rolId: rol.insertedId
             }]) 
             // actualizar la tabla  roles con el id del usuario
-            await db.collection('bar_rol').updateOne({ _id: rol.insertedId }, { $set: { userId: user.insertedIds[0], businessId: business.insertedIds[0] } })        
+            // await db.collection('bar_rol').updateOne({ _id: rol.insertedId }, { $set: { userId: user.insertedIds[0], businessId: business.insertedIds[0] } })        
             
             const token = await createToken(insertedData[0]);
             delete insertedData[0].password;
             // console.log('insertedData', insertedData);
-            await this.roleServ.createPlantillas();
+            // await this.roleServ.createPlantillas();
             return {
                 success: true,
                 data: insertedData,
