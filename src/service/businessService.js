@@ -49,7 +49,7 @@ class BusinessService {
 
         const dataUser = await db.collection('bar_business').findOne({ _id: new ObjectId(businessId) });
 
-        if (dataUser.length === 0) {
+        if (dataUser.length === 0 || dataUser === null) {
             throw new BadRequest("usuario no existe", "usuarioNoExiste")
         }
         let userData = dataUser;
@@ -60,7 +60,7 @@ class BusinessService {
         // delete roles['password'];
         // delete users['password'];
 
-        console.log(userData);
+        // console.log(userData);
 
         return {
             success: true,
