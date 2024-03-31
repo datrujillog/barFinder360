@@ -44,8 +44,8 @@ class UserService {
             const business = await this.businessServ.businessById(dataToken.businessId);
             if (!business.success) throw new Error('Business not found');
 
-            const role = await this.roleServ.roleById(dataToken.rol);
-            if (!role.success) throw new BadRequest(role.error);
+            // const role = await this.roleServ.roleById(dataToken.rol);
+            // if (!role.success) throw new BadRequest(role.error); s
 
             data.businessId = new ObjectId(dataToken.businessId);
             data.roleId = new ObjectId(data.roleId);
