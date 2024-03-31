@@ -41,6 +41,27 @@ function categoryRouter(app) {
         }
     });
 
+    router.get("/list", async (req, res, next) => {
+        try {
+            const businessId = req.headers.businessid;
+            const body = req.body;
+            const token = req.cookies.token;
+            const result = await validateBusiness(businessId, token);
+            if(!result.success) throw new BadRequest(result.error.message);
+            
+            const { success, category } = await categoryServ.categoryList(businessId, body);
+            success
+                ? authResponse(res, 201, true, "category list", {
+                    payload: category,
+                    token: token,
+                })
+                : errorResponse(res, response.error);
+
+        } catch (error) {
+            errorResponse(res, error.message);
+        }
+    });
+
 
 
 
