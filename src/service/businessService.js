@@ -47,61 +47,72 @@ class BusinessService {
 
     async businessById(businessId) {
 
-        const dataUser = await db.collection('bar_business').aggregate([
-            {
-                $match: {
-                    _id: new ObjectId(businessId)
-                }
-            },
-            {
-                $lookup: {  //  esta linea de codigo es para hacer un join con la tabla de usuarios
-                    from: 'bar_users',
-                    localField: '_id',
-                    foreignField: 'businessId',
-                    as: 'users'
-                }
-            },
-            {
-                $lookup: {
-                    from: 'bar_rol',
-                    localField: '_id',
-                    foreignField: 'businessId',
-                    as: 'roles'
-                }
-            }
-
-        ]).toArray();
+        const dataUser = await db.collection('bar_business').findOne({ _id: new ObjectId(businessId) });
 
         if (dataUser.length === 0) {
             throw new BadRequest("usuario no existe", "usuarioNoExiste")
         }
-        let userData = dataUser[0];
-        let roles = userData.roles[0];
-        let users = userData.users[0];
+        let userData = dataUser;
+        // let roles = userData.roles[0];
+        // let users = userData.users[0];
 
         delete userData['password'];
-        delete roles['password'];
-        delete users['password'];
+        // delete roles['password'];
+        // delete users['password'];
+
+        console.log(userData);
 
         return {
             success: true,
             business: userData
         };
 
-
-
-
-
-
-
-
-
-
-
-
-
     }
 
+
+    async usersByBusiness(businessId, idBusiness) {
+        try {
+            const users = await db.collection('bar_users').aggregate([
+                {
+                    $match: {
+                        businessId: new ObjectId(businessId),
+                    }
+                },
+                {
+                    $lookup: {
+                        from: "bar_rols",
+                        localField: "roleId",
+                        foreignField: "_id",
+                        as: "role"
+                    }
+                },
+                {
+                    $lookup: {
+                        from: "bar_business",
+                        localField: "businessId",
+                        foreignField: "_id",
+                        as: "business"
+                    }
+                }
+            ]).toArray();
+
+
+            if (users.length === 0) {
+                throw new BadRequest('No users found', 'noUsersFound');
+            }
+            for (let i in users) {
+                delete users[i].password;
+            }
+
+            return {
+                success: true,
+                users
+            };
+
+        } catch (error) {
+            return { success: false, error };
+        }
+    }
 }
 
 export default BusinessService;
