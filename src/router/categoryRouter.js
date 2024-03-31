@@ -44,15 +44,35 @@ function categoryRouter(app) {
     router.get("/list", async (req, res, next) => {
         try {
             const businessId = req.headers.businessid;
-            const body = req.body;
             const token = req.cookies.token;
             const result = await validateBusiness(businessId, token);
             if(!result.success) throw new BadRequest(result.error.message);
             
-            const { success, category } = await categoryServ.categoryList(businessId, body);
-            success
+            const response = await categoryServ.categoryList(businessId);
+            response.success
                 ? authResponse(res, 201, true, "category list", {
-                    payload: category,
+                    payload: response.category,
+                    token: token,
+                })
+                : errorResponse(res, response.error);
+
+        } catch (error) {
+            errorResponse(res, error.message);
+        }
+    });
+
+    router.get("/list/:id", async (req, res, next) => {
+        try {
+            const businessId = req.headers.businessid;
+            const categoryId = req.params.id;
+            const token = req.cookies.token;
+            const result = await validateBusiness(businessId, token);
+            if(!result.success) throw new BadRequest(result.error.message);
+
+            const response = await categoryServ.categoryListById(businessId, categoryId);
+            response.success
+                ? authResponse(res, 201, true, "category list", {
+                    payload: response.category,
                     token: token,
                 })
                 : errorResponse(res, response.error);
