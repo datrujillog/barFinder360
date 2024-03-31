@@ -18,7 +18,6 @@ function categoryRouter(app) {
     const categoryServ = new CategoryService();
 
     app.use("/api/v1/category", router);
-    // router.post["get"], "/create", async (req, res, next) => {4
 
     router.post("/create", async (req, res, next) => {
         try {
