@@ -12,6 +12,7 @@ import Business from "./src/router/businessRouter.js";
 import User from "./src/router/userRouter.js";
 import Rol from "./src/router/roleRouter.js";
 import Table from "./src/router/tableRouter.js";
+import Order from "./src/router/orderRouter.js";
 
 
 
@@ -29,7 +30,7 @@ Business(app);
 User(app);
 Rol(app);
 Table(app);
-
+Order(app);
 //middleware de errores
 app.use((error, req, res, next) => {
   console.error(error.message);
