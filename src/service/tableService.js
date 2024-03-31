@@ -6,7 +6,6 @@ import BusinessService from "./businessService.js";
 import { BadRequest } from "../middleware/errors.js";
 
 import db from "../database/db.js";
-import { extractDataFromToken } from "../helper/auth.js";
 
 class TableService {
     constructor() {

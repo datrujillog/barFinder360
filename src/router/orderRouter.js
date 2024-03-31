@@ -3,9 +3,10 @@ import express, { response } from "express";
 
 
 import { BadRequest } from "../middleware/errors.js";
+import { auth } from "../middleware/auth.js";
 
 import { authResponse, errorResponse, Responsee } from "../helper/response.js";
-import { extractDataFromToken } from "../helper/auth.js";
+// import { extractDataFromToken } from "../helper/auth.js";
 import OrderService from "../service/orderService.js";
 
 
@@ -25,7 +26,7 @@ function orderRouter(app) {
         const businessId  = req.headers.businessid; 
         const body = req.body;
         const token = req.cookies.token;
-        const dataToken = await extractDataFromToken(token)
+        const dataToken = await auth(token)
         try {
             if(dataToken.businessId !== businessId) throw new BadRequest('Error de autenticacion')            
         } catch (error) {

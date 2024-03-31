@@ -1,14 +1,13 @@
 // import { ObjectId } from "bson";
 import { ObjectId } from 'mongodb';
 
+import RoleService from "./roleService.js";
+import BusinessService from "./businessService.js";
 
+import { auth } from '../middleware/auth.js';
+import { BadRequest } from "../middleware/errors.js";
 
 import db from "../database/db.js";
-import { extractDataFromToken } from "../helper/auth.js";
-import { BadRequest } from "../middleware/errors.js";
-import BusinessService from "./businessService.js";
-import RoleService from "./roleService.js";
-
 
 class UserService {
     constructor() {
@@ -36,11 +35,10 @@ class UserService {
 
         }
     }
-
-
+    
     async createUser(data, token) {
         try {
-            const dataToken = extractDataFromToken(token);
+            const dataToken = auth(token);
             const business = await this.businessServ.businessById(dataToken.businessId);
             if (!business.success) throw new Error('Business not found');
 

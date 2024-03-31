@@ -3,9 +3,10 @@ import express, { response } from "express";
 
 import RoleService from "../service/roleService.js";
 
+import { auth } from "../middleware/auth.js";
 
 import { authResponse, errorResponse, Responsee } from "../helper/response.js";
-import { extractDataFromToken } from "../helper/auth.js";
+// import { extractDataFromToken } from "../helper/auth.js";
 import { BadRequest } from "../middleware/errors.js";
 
 // import { valitorUserSignup } from "../middleware/express-validator.js";
@@ -22,7 +23,7 @@ function businessRouter(app) {
     router.post("/create", async (req, res) => {
         const businessId  = req.headers.businessid; 
         const token = req.cookies.token;
-        const dataToken = await extractDataFromToken(token)
+        const dataToken = await auth(token)
         try {
             if(dataToken.businessId !== businessId) throw new BadRequest('Error de autenticacion')            
         } catch (error) {

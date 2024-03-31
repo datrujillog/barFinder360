@@ -7,7 +7,8 @@ import UserService from "../service/userService.js";
 
 import { authResponse, errorResponse, Responsee } from "../helper/response.js";
 import { BadRequest, NotFound } from "../middleware/errors.js";
-import { extractDataFromToken } from "../helper/auth.js";
+// import { extractDataFromToken } from "../helper/auth.js";
+import { auth } from "../middleware/auth.js";
 
 // import { valitorUserSignup } from "../middleware/express-validator.js";
 
@@ -25,7 +26,7 @@ function businessRouter(app) {
         // estoy enviado en postman el businessId por el headers 
         const businessId  = req.headers.businessid; 
         const token = req.cookies.token;
-        const dataToken = await extractDataFromToken(token)
+        const dataToken = await auth(token)
         try {
             if(dataToken.businessId !== businessId) throw new BadRequest('Error de autenticacion')            
         } catch (error) {

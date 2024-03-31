@@ -5,9 +5,10 @@ import BusinessService from "../service/businessService.js";
 import TableService from "../service/tableService.js";
 
 import { BadRequest } from "../middleware/errors.js"; 
+import { auth } from "../middleware/auth.js";
 
 import { errorResponse, authResponse, Responsee } from "../helper/response.js";
-import { extractDataFromToken } from "../helper/auth.js";
+// import { extractDataFromToken } from "../helper/auth.js";
 
 
 function TableRouter(app) {
@@ -25,7 +26,7 @@ function TableRouter(app) {
             const businessId = req.headers.businessid;
             const token = req.cookies.token;
 
-            const dataToken = await extractDataFromToken(token)
+            const dataToken = await auth(token)
 
             if (dataToken.businessId !== businessId) throw new BadRequest('Error de autenticacion')
 

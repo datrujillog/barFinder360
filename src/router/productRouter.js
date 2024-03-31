@@ -3,11 +3,10 @@ import express, { response } from "express";
 
 
 import { BadRequest } from "../middleware/errors.js";
+import { auth } from "../middleware/auth.js";
 
 import { authResponse, errorResponse, Responsee } from "../helper/response.js";
-import { extractDataFromToken } from "../helper/auth.js";
 import OrderService from "../service/orderService.js";
-
 
 
 function productRouter(app) {

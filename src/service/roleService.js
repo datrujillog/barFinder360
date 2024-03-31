@@ -1,10 +1,11 @@
 
 import { ObjectId } from 'mongodb';
 
+import { auth } from '../middleware/auth.js';
+import { BadRequest } from "../middleware/errors.js";
+
 import db from "../database/db.js";
 
-import { extractDataFromToken } from "../helper/auth.js";
-import { BadRequest } from "../middleware/errors.js";
 import plantillaRolAdmin from '../helper/plantillas/plantilla_rolAdmin.js'
 import plantillaRolUser from '../helper/plantillas/plantilla_rolUser.js'
 import plantillaRolSuperUser from '../helper/plantillas/plantilla_rolSuperAdmin.js'
@@ -18,7 +19,7 @@ class RoleService {
 
     async createRole(data, token) {
         try {
-            const dataToken = extractDataFromToken(token);
+            const dataToken = auth(token);
 
             // data.userId = dataToken.id;
             data.businessId = new ObjectId(dataToken.businessId);
