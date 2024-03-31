@@ -82,6 +82,30 @@ function categoryRouter(app) {
         }
     });
 
+    router.put("/update/:id", async (req, res, next) => {
+        try {
+            const businessId = req.headers.businessid;
+            const categoryId = req.params.id;
+            const body = req.body;
+            const token = req.cookies.token;
+            const result = await validateBusiness(businessId, token);
+            if(!result.success) throw new BadRequest(result.error.message);
+
+            const response = await categoryServ.categoryUpdate(businessId, categoryId, body);
+            response.success
+                ? authResponse(res, 201, true, "category updated", {
+                    payload: response.category,
+                    token: token,
+                })
+                : errorResponse(res, response.error);
+
+        } catch (error) {
+            errorResponse(res, error.message);
+        }
+    });
+
+    
+
 
 
 
