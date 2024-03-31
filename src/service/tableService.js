@@ -39,7 +39,6 @@ class TableService {
         }
     }
 
-
     async listTables(businessId) {
         try {
             const business = await this.businessServ.businessById(businessId);
