@@ -125,6 +125,25 @@ class CategoryService {
         }
     }
 
+    async categoryDelete(businessId, categoryId) {
+        try {
+            const query = {
+                _id: new ObjectId(categoryId),
+                businessId: new ObjectId(businessId)
+            }
+
+            const results = await db.collection('bar_categories').deleteOne(query);
+            if (results.deletedCount === 0) throw new Error('Category not deleted');
+
+            return {
+                success: true,
+                category: results
+            };
+        } catch (error) {
+            return { success: false, error };
+        }
+    }
+
 
 }
 
