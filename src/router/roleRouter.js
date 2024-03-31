@@ -35,11 +35,11 @@ function businessRouter(app) {
             : errorResponse(res, response.error.message);
     });
 
-    router.put("/v1/plantillas", async (req, res) => {
+    router.post("/plantillas", async (req, res) => {
         const data = req.body;
         let rolesIds= [];
         
-        const response = await roleServ.updatePlantillas(data)
+        const response = await roleServ.createPlantillas(data)
         response.success
             ? Responsee(res, 201, true, "Rol actualizado correctamente", { user: response })
             : errorResponse(res, response.error.message);
