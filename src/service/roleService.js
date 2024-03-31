@@ -40,7 +40,7 @@ class RoleService {
 
         try {
             // buscar el id del rol en la base de datos
-            const role = await db.collection('bar_rol').find({ _id: new ObjectId(roleId) }).toArray();
+            const role = await db.collection('bar_rols').find({ _id: new ObjectId(roleId) }).toArray();
 
             console.log(role);
 
@@ -79,7 +79,7 @@ class RoleService {
         let role;
 
         try {
-            const templateType = dataRoles.type === 'Admin' ? 'Admin' : dataRoles.type === 'User' ? 'User' : null;
+            const templateType = dataRoles.type === 'Admin' ? 'Admin' : dataRoles.type === 'User' ? 'User' : dataRoles.type === 'SuperAdmin' ? 'SuperAdmin' : null;
 
             role = await this.getRolesTemplate(templateType);
             if (!role.success) throw new BadRequest(role.error);
