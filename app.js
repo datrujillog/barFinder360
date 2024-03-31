@@ -13,6 +13,8 @@ import User from "./src/router/userRouter.js";
 import Rol from "./src/router/roleRouter.js";
 import Table from "./src/router/tableRouter.js";
 import Order from "./src/router/orderRouter.js";
+import Category from "./src/router/categoryRouter.js";
+import Product from "./src/router/productRouter.js";
 
 
 
@@ -31,6 +33,11 @@ User(app);
 Rol(app);
 Table(app);
 Order(app);
+Category(app);
+Product(app);
+
+
+
 //middleware de errores
 app.use((error, req, res, next) => {
   console.error(error.message);
