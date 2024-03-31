@@ -59,6 +59,11 @@ class TableService {
 
     async tableByOne(businessId, tableId) {
         try {
+
+            await this.businessServ.businessById(businessId);
+            if(!businessId) throw new BadRequest('Business not found');
+
+            
             const table = await db.collection('bar_tables').aggregate([
                 {
                     $match: {
