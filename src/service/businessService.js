@@ -98,6 +98,7 @@ class BusinessService {
 
 
             if (users.length === 0) {
+                // return { success: false, messages: 'No users found'};
                 throw new BadRequest('No users found', 'noUsersFound');
             }
             for (let i in users) {
