@@ -60,8 +60,8 @@ class TableService {
         try {
 
             await this.businessServ.businessById(businessId);
-            if(!businessId) throw new BadRequest('Business not found');
-            
+            if (!businessId) throw new BadRequest('Business not found');
+
             const table = await db.collection('bar_tables').aggregate([
                 {
                     $match: {
@@ -94,6 +94,44 @@ class TableService {
             return { success: false, error };
         }
     };
+
+    async updateTable(businessId, tableId, data) {
+
+        const business = await this.businessServ.businessById(businessId);
+        if (!business.success) throw new Error('Business not found');
+
+        const table = await db.collection('bar_tables').updateOne({ _id: new ObjectId(tableId), businessId: new ObjectId(businessId) }, { $set: data });
+
+        if (table.modifiedCount === 0) {
+            throw new BadRequest('Table not found');
+        }
+
+        return {
+            success: true,
+            data: table
+        };
+    }
+
+    async deleteTable(businessId, tableId) {
+        try {
+            const business = await this.businessServ.businessById(businessId);
+            if (!business.success) throw new Error('Business not found');
+
+            const table = await db.collection('bar_tables').deleteOne({ _id: new ObjectId(tableId), businessId: new ObjectId(businessId)});
+
+            if (table.deletedCount === 0) {
+                throw new BadRequest('Mesa no eliminada');
+            }
+
+            return {
+                success: true,
+                data: table
+            };
+
+        } catch (error) {
+            return { success: false, error };
+        }
+    }
 }
 
 
