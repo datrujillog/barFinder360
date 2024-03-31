@@ -49,7 +49,7 @@ const plantillaRolAdmin = {
                 "r": true,
                 "u": true,
                 "d": true
-            }
+            },
         },
 
 
