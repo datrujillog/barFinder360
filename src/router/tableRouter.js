@@ -84,6 +84,51 @@ function TableRouter(app) {
             errorResponse(res, error.message)
         }
     });
+
+    router.put("/update/:id", async (req, res) => {
+        try {
+            const data = req.body;
+            const businessId = req.headers.businessid;
+            const tableId = req.params.id;
+            const token = req.cookies.token;
+            const dataToken = await extractDataFromToken(token)
+
+            if (dataToken.businessId !== businessId) throw new BadRequest('Error de autenticacion')
+
+            const response = await tableServ.updateTable(businessId, tableId, data);
+
+            response.success
+                ? authResponse(res, 200, true, "Table updated", {
+                    payload: response.data,
+                    token: token,
+                })
+                : errorResponse(res, response.error);
+        } catch (error) {
+            errorResponse(res, error.message)
+        }
+    });
+
+    router.delete("/delete/:id", async (req, res) => {
+        try {
+            const businessId = req.headers.businessid;
+            const tableId = req.params.id;
+            const token = req.cookies.token;
+            const dataToken = await extractDataFromToken(token)
+
+            if (dataToken.businessId !== businessId) throw new BadRequest('Error de autenticacion')
+
+            const response = await tableServ.deleteTable(businessId, tableId);
+
+            response.success
+                ? authResponse(res, 200, true, "Table deleted", {
+                    payload: response.data,
+                    token: token,
+                })
+                : errorResponse(res, response.error);
+        } catch (error) {
+            errorResponse(res, error.message)
+        }
+    });
 }
 
 export default TableRouter;
