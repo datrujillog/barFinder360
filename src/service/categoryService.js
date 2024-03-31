@@ -97,6 +97,34 @@ class CategoryService {
         }
     }
 
+    async categoryUpdate(businessId, categoryId, body) {
+        try {
+            const query = {
+                _id: new ObjectId(categoryId),
+                businessId: new ObjectId(businessId)
+            }
+
+            const update = {
+                $set: {
+                    name: body.name,
+                    description: body.description,
+                    asset: body.asset,
+                    updatedAt: new Date()
+                }
+            }
+
+            const results = await db.collection('bar_categories').updateOne(query, update);
+            if (results.modifiedCount === 0) throw new Error('Category not updated');
+
+            return {
+                success: true,
+                category: results
+            };
+        } catch (error) {
+            return { success: false, error };
+        }
+    }
+
 
 }
 
