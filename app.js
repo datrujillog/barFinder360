@@ -11,6 +11,7 @@ import Auth from "./src/router/authRouter.js";
 import Business from "./src/router/businessRouter.js";
 import User from "./src/router/userRouter.js";
 import Rol from "./src/router/roleRouter.js";
+import Table from "./src/router/tableRouter.js";
 
 
 
@@ -27,6 +28,7 @@ Auth(app);
 Business(app);
 User(app);
 Rol(app);
+Table(app);
 
 //middleware de errores
 app.use((error, req, res, next) => {
