@@ -40,6 +40,17 @@ const plantillaRolAdmin = {
                 "d": true
             }
         },
+        "table": {
+            "accessModule": {
+                "showModule": true
+            },
+            "access": {
+                "c": true,
+                "r": true,
+                "u": true,
+                "d": true
+            }
+        },
 
 
 

@@ -20,6 +20,14 @@ const plantillaRolSuperUser = {
                 "r": true,
                 "u": true,
                 "d": true
+            },
+            "personalInformation": {
+                "access": {
+                    "c": true,
+                    "r": true,
+                    "u": true,
+                    "d": true
+                }
             }
         },
         "roles": {
@@ -33,16 +41,17 @@ const plantillaRolSuperUser = {
                 "d": true
             }
         },
-        "personalInformation": {
+        "table": {
+            "accessModule": {
+                "showModule": true
+            },
             "access": {
                 "c": true,
                 "r": true,
                 "u": true,
                 "d": true
             }
-        }
-
-
+        },
     },
     "accessTo": []
 }
