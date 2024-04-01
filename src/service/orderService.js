@@ -3,6 +3,7 @@ import { ObjectId } from "bson";
 import { BadRequest } from "../middleware/errors.js";
 
 import db from "../database/db.js";
+import { parseOrder } from "../helper/normalizeData.js";
 
 
 class OrderService {
@@ -10,28 +11,34 @@ class OrderService {
         console.log('Order Service is created');
     }
 
-    //! Queda piente para continuar con el servicio de ordenes 
-    
-    /** @description Devuelve la lista de ordenes de un negocio */
 
-    
 
-    async orderCreate(businessId,body) {
-        try { 
+    async orderCreate(businessId, body,user) {
+        try {
+            const save = await parseOrder(body, businessId,user)
+            if (save.error) throw new BadRequest(save.error);
 
-            const order = {
-                businessId: ObjectId(businessId),
+
+            const results = await db.collection("bar_orders").insertMany([save]);
+            if (results.acknowledged === false) throw new BadRequest("Error al insertar el pedido")
+
+            const insertedIds = results.insertedIds
+            const insertedData = Object.keys(insertedIds).map(key => ({
+                _id: insertedIds[key],
                 ...body
+            }));
+
+            return {
+                success: true,
+                Order: insertedData
             }
-            const response = await db.collection('order').insertOne(order);
-            return { success: true, order: response.ops[0] }
 
         } catch (error) {
-            return { success: false, error }
+            return {
+                success: false,
+                error: error
+            }
         }
-
-
-
     }
 }
 
