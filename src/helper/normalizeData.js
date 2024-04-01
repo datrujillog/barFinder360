@@ -70,21 +70,22 @@ const parseProduct = async (body, businessId) => {
             }
         }
 
-        // Definir los valores por defecto para los campos opcionales
+        // ! falta solucionar el problema de estos arrays que no los toma
         const asset = [false, true];
         const status = ['created', 'deleted', 'updated'];
-
-        // Crear el objeto product
+        const typeProduct = ['normal', 'combo'];
+    
+        // Crear el objeto product 
         const product = {
             name: body.name,
-            type: body.type,
+            type: body.type, 
             code: body.code,
             salePrice: body.salePrice,
             TimePreparation: body.TimePreparation,
             description: body.description || '',
-            asset: asset[body.asset],
+            asset: body.asset,
             image: body.image,
-            status: status[body.status] || 'created',
+            status: body.status,
             categoryId: new ObjectId(body.categoryId),
             promotionId: body.promotionId ? new ObjectId(body.promotionId) : null,
             businessId: new ObjectId(businessId),
@@ -92,7 +93,40 @@ const parseProduct = async (body, businessId) => {
             updatedAt: new Date()
         };
 
-        return product;
+        return product 
+    } catch (error) {
+        // Devolver un objeto con éxito false y el mensaje de error
+        return { success: false, error: error.message };
+    }
+};
+
+
+const parseProductUpdate = async (body, businessId) => {
+    try {
+        // Definir los valores por defecto para los campos opcionales
+        const asset = [false, true];
+        const status = ['created', 'deleted', 'updated'];
+        const type = ['normal', 'combo'];
+
+        // Crear el objeto product
+        const product = {
+            name: body.name,
+            type: type[body.type],
+            code: body.code,
+            salePrice: body.salePrice,
+            TimePreparation: body.TimePreparation,
+            description: body.description || '',
+            asset: asset[body.asset],
+            image: body.image,
+            status: status[body.status],
+            categoryId: new ObjectId(body.categoryId),
+            promotionId: body.promotionId ? new ObjectId(body.promotionId) : null,
+            businessId: new ObjectId(businessId),
+            createdAt: new Date(),
+            updatedAt: new Date()
+        };
+
+        return product
     } catch (error) {
         // Devolver un objeto con éxito false y el mensaje de error
         return { success: false, error: error.message };
