@@ -73,7 +73,8 @@ class OrderService {
             from: "bar_products",
             localField: "servidores.items.productos.productId",
             foreignField: "_id",
-            as: "productos",
+            as: "products",
+            // as: "servidores.items.productos",
           },
         },
         {
