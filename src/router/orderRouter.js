@@ -27,7 +27,7 @@ function orderRouter(app) {
             const businessId = req.headers.businessid;
             const body = req.body;
             const token = req.cookies.token;
-            const result = await auth(businessId, token);
+            const result = await auth(businessId, token); 
             if(!result.success) throw new BadRequest(result.error.message);
             const user = result.data.id
             const response = await orderServ.orderCreate(businessId, body,user)
@@ -47,12 +47,12 @@ function orderRouter(app) {
         try {
             const businessId = req.headers.businessid;
             const token = req.cookies.token;
-            const result = await auth(businessId, token);
+            const result = await auth(businessId, token); 
             if(!result.success) throw new BadRequest(result.error.message);
             
-            const response = await productServ.productList(businessId)
+            const response = await productServ.orderList(businessId)
             response.success
-                ? authResponse(res, 200, true, "User created", {
+                ? authResponse(res, 200, true, "Order List", {
                     payload: response,
                     token: token,
                 })

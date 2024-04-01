@@ -16,11 +16,10 @@ const auth = async (businessId, token) => {
     try {
         
         const verify = await verifyToken(token);
-        // throw new BadRequest(verify.error.message);
-
-
         const data = await extractDataFromToken(token);
-        // req.user = data;
+        console.log(data)
+
+        if(data.businessId !== businessId) throw new BadRequest("No tienes permisos para acceder a esta información");
 
         return {
             success: true,

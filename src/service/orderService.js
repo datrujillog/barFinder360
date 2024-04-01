@@ -40,6 +40,44 @@ class OrderService {
             }
         }
     }
+
+    async orderList(businessId) {
+        try {
+            const results = await db.collection('bar_orders').aggregate([
+                {
+                    $match: {
+                        businessId: new ObjectId(businessId),
+                    },
+                },
+                {
+                    $lookup: {
+                        from: "bar_products",
+                        localField: "productId",
+                        foreignField: "_id",
+                        as: "product",
+                    },
+                },
+                {
+                    $lookup: {
+                        from: "bar_business",
+                        localField: "businessId",
+                        foreignField: "_id",
+                        as: "business",
+                    },
+                },
+            ]).toArray()
+
+            if (results.length === 0) throw new Error('Products not found');
+
+            return {
+                success: true,
+                Products: results
+            };
+        } catch (error) {
+            return { success: false, error };
+        }
+    }
+
 }
 
 export default OrderService;
