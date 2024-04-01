@@ -36,7 +36,6 @@ class ProductService {
 
     async productList(businessId) {
         try {
-            // const results = await db.collection('bar_products').find({ businessId: new ObjectId(businessId) }).toArray();
             const results = await db.collection('bar_products').aggregate([
                 {
                   $match: {
