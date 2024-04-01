@@ -7,92 +7,122 @@ import { parseOrder } from "../helper/normalizeData.js";
 
 
 class OrderService {
-    constructor() {
-        console.log('Order Service is created');
-    }
+  constructor() {
+    console.log('Order Service is created');
+  }
 
 
 
-    async orderCreate(businessId, body,user) {
-        try {
-            const save = await parseOrder(body, businessId,user)
-            if (save.error) throw new BadRequest(save.error);
+  async orderCreate(businessId, body, user) {
+    try {
+      // const save = await parseOrder(body, businessId,user)
+      // if (save.error) throw new BadRequest(save.error);
+
+      const productoPedido = body.servidores.flatMap((servidor) => servidor.items.map((item) => item.productId))
+
+      const idsObjeto = productoPedido.map(id => new ObjectId(id));
+      const results = await db.collection('bar_products').find({ "_id": { "$in": idsObjeto } }).toArray()
+      if (results.length === 0) throw new Error('Products not found');
 
 
-            const results = await db.collection("bar_orders").insertMany([save]);
-            if (results.acknowledged === false) throw new BadRequest("Error al insertar el pedido")
-
-            const insertedIds = results.insertedIds
-            const insertedData = Object.keys(insertedIds).map(key => ({
-                _id: insertedIds[key],
-                ...body
-            }));
-
-            return {
-                success: true,
-                Order: insertedData
-            }
-
-        } catch (error) {
-            return {
-                success: false,
-                error: error
-            }
+      // Mapea los resultados para incluir nombre y precio de cada producto
+      const productos = results.map(producto => {
+        const item = body.servidores.find(servidor => servidor.items.find(item => item.productId == producto._id.toString()))
+        const itemProducto = item.items.find(item => item.productId == producto._id.toString())
+        return {
+          // ...producto,
+          name: producto.name,
+          salePrice: producto.salePrice,
         }
+      })
+
+      
+
+
+
+
+
+      console.log(productos)
+
+
+
+
+
+
+      // const results = await db.collection("bar_orders").insertMany([save]);
+      // if (results.acknowledged === false) throw new BadRequest("Error al insertar el pedido")
+
+      // const insertedIds = results.insertedIds
+      // const insertedData = Object.keys(insertedIds).map(key => ({
+      //   _id: insertedIds[key],
+      //   ...body
+      // }));
+
+      return {
+        success: true,
+        Order: productos
+      }
+
+    } catch (error) {
+      return {
+        success: false,
+        error: error
+      }
     }
+  }
 
-    async orderList(businessId) {
-        try {
-            const results = await db.collection('bar_orders').aggregate([
-                {
-                  $match: {
-                    businessId: new ObjectId(businessId),
-                  },
-                },
-                {
-                  $lookup: {
-                    from: "bar_products",
-                    localField: "productId",
-                    foreignField: "_id",
-                    as: "product",
-                  },
-                },
-                {
-                  $lookup: {
-                    from: "bar_business",
-                    localField: "businessId",
-                    foreignField: "_id",
-                    as: "business",
-                  },
-                },
-                {
-                  $lookup: {
-                    from: "bar_tables",
-                    localField: "tableId",
-                    foreignField: "_id",
-                    as: "tables",
-                  },
-                },
-                {
-                  $lookup: {
-                    from: "bar_users",
-                    localField: "userId",
-                    foreignField: "_id",
-                    as: "users",
-                  },
-                },
-              ]).toArray()
+  async orderList(businessId) {
+    try {
+      const results = await db.collection('bar_orders').aggregate([
+        {
+          $match: {
+            businessId: new ObjectId(businessId),
+          },
+        },
+        {
+          $lookup: {
+            from: "bar_products",
+            localField: "productId",
+            foreignField: "_id",
+            as: "product",
+          },
+        },
+        {
+          $lookup: {
+            from: "bar_business",
+            localField: "businessId",
+            foreignField: "_id",
+            as: "business",
+          },
+        },
+        {
+          $lookup: {
+            from: "bar_tables",
+            localField: "tableId",
+            foreignField: "_id",
+            as: "tables",
+          },
+        },
+        {
+          $lookup: {
+            from: "bar_users",
+            localField: "userId",
+            foreignField: "_id",
+            as: "users",
+          },
+        },
+      ]).toArray()
 
-            if (results.length === 0) throw new Error('Products not found');
+      if (results.length === 0) throw new Error('Products not found');
 
-            return {
-                success: true,
-                order: results
-            };
-        } catch (error) {
-            return { success: false, error };
-        }
+      return {
+        success: true,
+        order: results
+      };
+    } catch (error) {
+      return { success: false, error };
     }
+  }
 
 }
 
