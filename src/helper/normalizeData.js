@@ -133,7 +133,7 @@ const parseProductUpdate = async (body, businessId) => {
 
 
 const parseOrder = async (body, businessId, user, results) => {
-    const requiredFields = ['mesa'];
+    const requiredFields = ['tableId','servidores'];
 
     try {
         for (const field of requiredFields) {
