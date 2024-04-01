@@ -18,9 +18,7 @@ function orderRouter(app) {
     const orderServ = new OrderService();
 
     app.use("/api/v1/order", router);
-//! Queda piente para continuar con el servicio de ordenes 
-    
-    /** @description Devuelve la lista de ordenes de un negocio */ 
+
     
     router.post("/create", async (req, res, next) => {
         try {
