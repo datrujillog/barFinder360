@@ -132,8 +132,8 @@ const parseProductUpdate = async (body, businessId) => {
 };
 
 
-const parseOrder = async (body, businessId,user) => {
-    const requiredFields = ['units', 'total', 'state', 'tableId', 'productId'];
+const parseOrder = async (body, businessId, user, results) => {
+    const requiredFields = ['mesa'];
 
     try {
         for (const field of requiredFields) {
@@ -142,25 +142,44 @@ const parseOrder = async (body, businessId,user) => {
             }
         }
 
-        const order = {
-            units: body.units,
-            date: new Date(),
-            total: body.total,
-            state: body.state,
-            tableId: new ObjectId(body.tableId),
-            productId: body.productId.map(id => new ObjectId(id)),
-            userId: new ObjectId(user),
+        const productos = results.map(producto => {
+            const item = body.servidores.find(servidor => servidor.items.find(item => item.productId == producto._id.toString()))
+            console.log(item)
+            const itemProducto = item.items.find(item => item.productId == producto._id.toString())
+            return {
+                mesero: user,
+                items: {
+                    productos: {
+                        name: producto.name,
+                        salePrice: producto.salePrice,
+                    },
+                    cantidad: itemProducto.cantidad,
+                    total: itemProducto.cantidad * producto.salePrice,
+                    // total: itemProducto.total,
+                    user: user,
+                    fecha: new Date()
+
+                },
+            }
+        })
+
+        const save = {
             businessId: new ObjectId(businessId),
-            createdAt: new Date(),
-            updatedAt: new Date()
+            userId: new ObjectId(user._id),
+            tableId: new ObjectId(body.tableId),
+            status: 'PENDING',
+            total: productos.reduce((acc, item) => acc + item.salePrice, 0),
+            servidores: productos,
         }
 
-        return order
+        return save
 
     } catch (error) {
         return { success: false, error: error.message };
     }
 };
+
+
 
 
 export {
