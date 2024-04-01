@@ -26,15 +26,11 @@ function businessRouter(app) {
         // estoy enviado en postman el businessId por el headers 
         const businessId  = req.headers.businessid; 
         const token = req.cookies.token;
-        const dataToken = await auth(token)
-        try {
-            if(dataToken.businessId !== businessId) throw new BadRequest('Error de autenticacion')            
-        } catch (error) {
-            return errorResponse(res, error.message)
-            
-        }
+        const result = await auth(businessId,token)
+        if(!result.success) throw new BadRequest(result.error.message);
 
         const response = await userServ.createUser(req.body, token);
+        
         response.success
             ? Responsee(res, 201, true, "Usuario creado correctamente", { user: response.user })
             : errorResponse(res, response.error.message);
