@@ -1,95 +1,50 @@
 {
-    "ok": true,
-    "message": "Order List",
-    "payload": {
-        "success": true,
-        "order": [
-            {
-                "_id": "660a2e6e90b66dd369823f46",
-                "units": 5,
-                "date": "2024-04-01T03:47:58.177Z",
-                "total": 100000,
-                "state": true,
-                "tableId": "6608bcf4ca35c7ae79893492",
-                "productId": [
-                    "660a0c12beb0d3b1dc187f03",
-                    "660a2a49c913f1364b143e94"
-                ],
-                "userId": "6608af95aa3ce6031feb303a",
-                "businessId": "6608af95aa3ce6031feb3039",
-                "createdAt": "2024-04-01T03:47:58.177Z",
-                "updatedAt": "2024-04-01T03:47:58.177Z",
-                "product": [
-                    {
-                        "_id": "660a0c12beb0d3b1dc187f03",
-                        "name": "Salchipapas d deleted",
-                        "type": "normal",
-                        "code": "sd2154",
-                        "salePrice": 24900,
-                        "TimePreparation": "2minutos",
-                        "description": " esto es un ejemplo",
-                        "asset": true,
-                        "image": "image.png",
-                        "status": "deleted",
-                        "categoryId": "6609822847da4de26334217a",
-                        "promotionId": "6609822847da4de26334217a",
-                        "businessId": "6608af95aa3ce6031feb3039",
-                        "createdAt": "2024-04-01T01:21:18.169Z",
-                        "updatedAt": "2024-04-01T01:21:18.169Z"
-                    },
-                    {
-                        "_id": "660a2a49c913f1364b143e94",
-                        "name": "ejemplo # 2",
-                        "type": "normal",
-                        "code": "sd2154",
-                        "salePrice": 24900,
-                        "TimePreparation": "2minutos",
-                        "description": " esto es un ejemplo",
-                        "asset": true,
-                        "image": "image.png",
-                        "status": "deleted",
-                        "categoryId": "6609822847da4de26334217a",
-                        "promotionId": "6609822847da4de26334217a",
-                        "businessId": "6608af95aa3ce6031feb3039",
-                        "createdAt": "2024-04-01T03:30:17.647Z",
-                        "updatedAt": "2024-04-01T03:30:17.647Z"
-                    }
-                ],
-                "business": [
-                    {
-                        "_id": "6608af95aa3ce6031feb3039",
-                        "name": "Yamile",
-                        "lastName": "Hurtado",
-                        "email": "yami@example.com",
-                        "password": "$2b$10$GD5.iEeKtg80U4hx7zuqieDQHdqWQPsspVGMGwRNYDNUxl8STI6q.",
-                        "phone": "31646464",
-                        "NameBusiness": "shamy",
-                        "tipoNegocio": "comidas del mar"
-                    }
-                ],
-                "tables": [
-                    {
-                        "_id": "6608bcf4ca35c7ae79893492",
-                        "name": "Mesa #2",
-                        "Description": "Esta es la  mesa # 2",
-                        "state": true,
-                        "businessId": "6608af95aa3ce6031feb3039"
-                    }
-                ],
-                "users": [
-                    {
-                        "_id": "6608af95aa3ce6031feb303a",
-                        "name": "Yamile",
-                        "lastname": "Hurtado",
-                        "email": "yami@example.com",
-                        "password": "$2b$10$GD5.iEeKtg80U4hx7zuqieDQHdqWQPsspVGMGwRNYDNUxl8STI6q.",
-                        "phone": "31646464",
-                        "businessId": "6608af95aa3ce6031feb3039"
-                    }
-                ]
-            }
-        ]
+    "_id": {
+      "$oid": "660ae718e96d0f20dc7e1e95"
     },
-    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MDhhZjk1YWEzY2U2MDMxZmViMzAzYSIsImVtYWlsIjoieWFtaUBleGFtcGxlLmNvbSIsImJ1c2luZXNzSWQiOiI2NjA4YWY5NWFhM2NlNjAzMWZlYjMwMzkiLCJpYXQiOjE3MTE5NDEyODcsImV4cCI6MTcxMTk0NDg4N30.1Rb6DHfpVbIJcBsyTcKQlghpI0I3R3SDftR7I1pXeEQ",
-    "exp": 1711944887
-}
+    "businessId": {
+      "$oid": "6608af95aa3ce6031feb3039"
+    },
+    "userId": {
+      "$oid": "660ae7185ccb9f036e45d615"
+    },
+    "tableId": {
+      "$oid": "660ae7185ccb9f036e45d616"
+    },
+    "status": "PENDING",
+    "total": {
+      "$numberDouble": "NaN"
+    },
+    "servidores": [
+      {
+        "items": {
+          "name": null,
+          "productos": {
+            "name": "Salchipapas d deleted",
+            "salePrice": 5000
+          },
+          "cantidad": 3,
+          "total": 15000,
+          "user": null,
+          "fecha": {
+            "$date": "2024-04-01T16:55:52.706Z"
+          }
+        }
+      },
+      {
+        "items": {
+          "name": null,
+          "productos": {
+            "name": "ejemplo # 2",
+            "salePrice": 10000
+          },
+          "cantidad": 2,
+          "total": 20000,
+          "user": null,
+          "fecha": {
+            "$date": "2024-04-01T16:55:52.711Z"
+          }
+        }
+      }
+    ]
+  }
