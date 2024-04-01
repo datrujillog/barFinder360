@@ -30,13 +30,14 @@ function orderRouter(app) {
             const result = await auth(businessId, token); 
             if(!result.success) throw new BadRequest(result.error.message);
             const user = result.data.id
+            
             const response = await orderServ.orderCreate(businessId, body,user)
-            response.success
-                ? authResponse(res, 201, true, "User created", {
-                    payload: response,
-                    token: token,
-                })
-                : errorResponse(res, response.error);
+
+            if(!response.success) throw new BadRequest(response.error.message);
+            authResponse(res, 201, true, "Order created", {
+                payload: response,
+                token: token,
+            });
 
         } catch (error) {
             errorResponse(res, error.message);
