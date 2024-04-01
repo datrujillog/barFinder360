@@ -102,7 +102,7 @@ class OrderService {
         },
       ]).toArray()
 
-      if (results.length === 0) throw new Error('Products not found');
+      if (results.length === 0) throw new BadRequest('Products not found');
 
       return {
         success: true,
