@@ -1,14 +1,18 @@
 import { ObjectId } from "bson";
 
+import ProductService from "./productService.js";
+import TableService from "./tableService.js";
+
 import { BadRequest } from "../middleware/errors.js";
 
 import db from "../database/db.js";
 import { parseOrder } from "../helper/normalizeData.js";
 
-
 class OrderService {
   constructor() {
     console.log('Order Service is created');
+    this.productServ = new ProductService();
+    this.tableServ = new TableService();
   }
 
 
@@ -18,15 +22,20 @@ class OrderService {
 
       const productoPedido = body.servidores.flatMap((servidor) => servidor.items.map((item) => item.productId))
 
+      //  validar si la mesa existe en la base de datos
+      const table = await this.tableServ.tableByOne(businessId, body.tableId)
+      if (table.error) throw new BadRequest(table.error);
+
+      // validar si los productos existen en la base de datos
       const idsObjeto = productoPedido.map(id => new ObjectId(id));
-      const results = await db.collection('bar_products').find({ "_id": { "$in": idsObjeto } }).toArray()
-      if (results.length === 0) throw new Error('Products not found');
-  
-      
-      const save = await parseOrder(body, businessId,user,results)
+      const results = await this.productServ.orderByIdproduct(businessId, idsObjeto)
+      if (results.error) throw new BadRequest(results.error);
+
+      // parsear los datos para guardar en la base de datos
+      const save = await parseOrder(body, businessId, user, results.Product)
       if (save.error) throw new BadRequest(save.error);
 
-
+      // guarda la orders en la base de datos 
       const response = await db.collection("bar_orders").insertMany([save]);
       if (response.acknowledged === false) throw new BadRequest("Error al insertar el pedido")
 
@@ -42,29 +51,6 @@ class OrderService {
         order: insertedData
       }
 
-
-
-
-
-
-
-
-
-
-
-      // const results = await db.collection("bar_orders").insertMany([save]);
-      // if (results.acknowledged === false) throw new BadRequest("Error al insertar el pedido")
-
-      // const insertedIds = results.insertedIds
-      // const insertedData = Object.keys(insertedIds).map(key => ({
-      //   _id: insertedIds[key],
-      //   ...body
-      // }));
-
-      // return {
-      //   success: true,
-      //   Order: save
-      // }
 
     } catch (error) {
       return {
