@@ -44,7 +44,7 @@ function categoryRouter(app) {
         try {
             const businessId = req.headers.businessid;
             const token = req.cookies.token;
-            const result = await validateBusiness(businessId, token);
+            const result = await auth(businessId, token);
             if(!result.success) throw new BadRequest(result.error.message);
             
             const response = await categoryServ.categoryList(businessId);
