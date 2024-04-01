@@ -29,8 +29,6 @@ let parseNewRols = async (obj, objAuthorizationPlantilla) => {
 }
 
 
-
-
 let valuesNestedRecusive = async (dataBody, dataNormalice) => {
     const object = {}
     let i = 1;
@@ -74,11 +72,11 @@ const parseProduct = async (body, businessId) => {
         const asset = [false, true];
         const status = ['created', 'deleted', 'updated'];
         const typeProduct = ['normal', 'combo'];
-    
+
         // Crear el objeto product 
         const product = {
             name: body.name,
-            type: body.type, 
+            type: body.type,
             code: body.code,
             salePrice: body.salePrice,
             TimePreparation: body.TimePreparation,
@@ -93,7 +91,7 @@ const parseProduct = async (body, businessId) => {
             updatedAt: new Date()
         };
 
-        return product 
+        return product
     } catch (error) {
         // Devolver un objeto con éxito false y el mensaje de error
         return { success: false, error: error.message };
@@ -134,7 +132,39 @@ const parseProductUpdate = async (body, businessId) => {
 };
 
 
+const parseOrder = async (body, businessId,user) => {
+    const requiredFields = ['units', 'total', 'state', 'tableId', 'productId'];
+
+    try {
+        for (const field of requiredFields) {
+            if (!(field in body)) {
+                throw new BadRequest(`Falta el campo obligatorio: ${field}`);
+            }
+        }
+
+        const order = {
+            units: body.units,
+            date: new Date(),
+            total: body.total,
+            state: body.state,
+            tableId: new ObjectId(body.tableId),
+            productId: body.productId.map(id => new ObjectId(id)),
+            userId: new ObjectId(user),
+            businessId: new ObjectId(businessId),
+            createdAt: new Date(),
+            updatedAt: new Date()
+        }
+
+        return order
+
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+};
+
+
 export {
     parseNewRols,
-    parseProduct
+    parseProduct,
+    parseOrder
 }
