@@ -1,24 +1,34 @@
-// import extractDataFromToken from "../helper/extractData.js";
+import jwt from "jsonwebtoken";
+import res from "express";
 
+import { NotFound, BadRequest } from "./errors.js";
 
 import config from "../config/config.js";
+
 import { extractDataFromToken } from "../helper/extractData.js";
 
+const auth = async (businessId, token) => {
 
-const auth = async (req, res, next) => {
-    const token = req;
     // const token = req.cookies.token;
     if (!token) {
-        return res.status(401).json({ message: "Unauthorized" });
+        throw new NotFound("Token is required");
     }
     try {
+        
+        const verify = await verifyToken(token);
+        // throw new BadRequest(verify.error.message);
+
+
         const data = await extractDataFromToken(token);
         // req.user = data;
-        console.log(data);
 
-        return data;
+        return {
+            success: true,
+            data: data,
+            message: `Authenticated user ${data.email}`,
+        }
     } catch (error) {
-        return res.status(401).json({ message: "Unauthorized" });
+        return { success: false, error: error };
     }
 };
 
@@ -26,19 +36,22 @@ const createAccessToken = user => {
     return jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: "15m" });
 }
 // verifar si el token es valido
-const verifyToken = (req, res, next) => {
-    const token = req.cookies.token;
+const verifyToken = (token) => {
+
     if (!token) {
-        return res.status(401).json({ message: "Unauthorized" });
+        throw new BadRequest("Token is required");
     }
     jwt.verify(token, config.jwtSecret, (error, user) => {
         if (error) {
-            return res.status(403).json({ message: "Forbidden" });
+            throw new BadRequest("Invalid token");
         }
-        req.user = user;
-        next();
+        return user;
     });
+
+
+
+
 };
 
 
-export { auth, verifyToken, createAccessToken}
+export { auth, verifyToken, createAccessToken }
