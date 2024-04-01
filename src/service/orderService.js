@@ -28,21 +28,80 @@ class OrderService {
       // Mapea los resultados para incluir nombre y precio de cada producto
       const productos = results.map(producto => {
         const item = body.servidores.find(servidor => servidor.items.find(item => item.productId == producto._id.toString()))
+        console.log(item)
         const itemProducto = item.items.find(item => item.productId == producto._id.toString())
         return {
-          // ...producto,
-          name: producto.name,
-          salePrice: producto.salePrice,
+          mesero: user,
+          items: {
+            productos: {
+              name: producto.name,
+              salePrice: producto.salePrice,
+            },
+            cantidad: itemProducto.cantidad,
+            total: itemProducto.cantidad * producto.salePrice,
+            // total: itemProducto.total,
+            user: user,
+            fecha: new Date()
+
+          },
         }
       })
 
-      
+      const items = {
+        name: body.servidores.name,
+      }
+
+      const save = {
+        businessId: new ObjectId(businessId),
+        userId: new ObjectId(user._id),
+        tableId: new ObjectId(body.tableId),
+        status: 'PENDING',
+        total: productos.reduce((acc, item) => acc + item.salePrice, 0),
+        servidores: productos,
+      }
+
+      console.log(save)
+
+      // const save = {
+
+      //   // businessId: new ObjectId(businessId),
+      //   // userId: new ObjectId(user._id),
+      //   // tableId: new ObjectId(body.tableId),
+      //   // status: 'PENDING',
+      //   // total: productos.reduce((acc, item) => acc + item.salePrice, 0),
+      //   // servidores: productos,
+      //   items: body.servidores.map(servidor => ({
+      //     name: servidor.name,
+      //     items: servidor.items.map(item => ({
+      //       // product: new ObjectId(item.productId),
+      //       product: productos,
+      //       cantidad: item.cantidad,
+      //       total: item.total,
+      //       fecha: new Date()
+      //     }))
+      //   })),
+      // }
+
+
+      const response = await db.collection("bar_orders").insertMany([save]);
+      if (response.acknowledged === false) throw new BadRequest("Error al insertar el pedido")
+
+
+      const insertedIds = response.insertedIds
+      const insertedData = Object.keys(insertedIds).map(key => ({
+        _id: insertedIds[key],
+        ...body
+      }));
+
+      return {
+        success: true,
+        order: insertedData
+      }
 
 
 
 
 
-      console.log(productos)
 
 
 
@@ -58,10 +117,10 @@ class OrderService {
       //   ...body
       // }));
 
-      return {
-        success: true,
-        Order: productos
-      }
+      // return {
+      //   success: true,
+      //   Order: save
+      // }
 
     } catch (error) {
       return {
