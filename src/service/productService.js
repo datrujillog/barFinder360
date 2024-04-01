@@ -155,6 +155,33 @@ class ProductService {
     }
 
 
+
+
+    async orderByIdproduct(businessId, idsObjeto) {
+        try {
+            const results = await db.collection('bar_products').aggregate([
+                {
+                    $match: {
+                        _id: { $in: idsObjeto },
+                        businessId: new ObjectId(businessId),
+                    }
+                },
+            ]).toArray();
+
+            if (results.length === 0) {
+                throw new Error('Products not found');
+            }
+
+            return {
+                success: true,
+                Product: results
+            };
+        } catch (error) {
+            return { success: false, error };
+        }
+    }
+
+
 }
 
 export default ProductService;
