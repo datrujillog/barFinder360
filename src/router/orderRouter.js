@@ -50,12 +50,12 @@ function orderRouter(app) {
             if(!result.success) throw new BadRequest(result.error.message);
             
             const response = await orderServ.orderList(businessId)
-            response.success
-                ? authResponse(res, 200, true, "Order List", {
-                    payload: response,
-                    token: token,
-                })
-                : errorResponse(res, response.error);
+
+            if(!response.success) throw new BadRequest(response.error.message);
+            authResponse(res, 200, true, "Order ok", {
+                payload: response,
+                token: token,
+            });
 
         } catch (error) {
             errorResponse(res, error.message);
