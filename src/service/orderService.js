@@ -15,72 +15,16 @@ class OrderService {
 
   async orderCreate(businessId, body, user) {
     try {
-      // const save = await parseOrder(body, businessId,user)
-      // if (save.error) throw new BadRequest(save.error);
 
       const productoPedido = body.servidores.flatMap((servidor) => servidor.items.map((item) => item.productId))
 
       const idsObjeto = productoPedido.map(id => new ObjectId(id));
       const results = await db.collection('bar_products').find({ "_id": { "$in": idsObjeto } }).toArray()
       if (results.length === 0) throw new Error('Products not found');
-
-
-      // Mapea los resultados para incluir nombre y precio de cada producto
-      const productos = results.map(producto => {
-        const item = body.servidores.find(servidor => servidor.items.find(item => item.productId == producto._id.toString()))
-        console.log(item)
-        const itemProducto = item.items.find(item => item.productId == producto._id.toString())
-        return {
-          mesero: user,
-          items: {
-            productos: {
-              name: producto.name,
-              salePrice: producto.salePrice,
-            },
-            cantidad: itemProducto.cantidad,
-            total: itemProducto.cantidad * producto.salePrice,
-            // total: itemProducto.total,
-            user: user,
-            fecha: new Date()
-
-          },
-        }
-      })
-
-      const items = {
-        name: body.servidores.name,
-      }
-
-      const save = {
-        businessId: new ObjectId(businessId),
-        userId: new ObjectId(user._id),
-        tableId: new ObjectId(body.tableId),
-        status: 'PENDING',
-        total: productos.reduce((acc, item) => acc + item.salePrice, 0),
-        servidores: productos,
-      }
-
-      console.log(save)
-
-      // const save = {
-
-      //   // businessId: new ObjectId(businessId),
-      //   // userId: new ObjectId(user._id),
-      //   // tableId: new ObjectId(body.tableId),
-      //   // status: 'PENDING',
-      //   // total: productos.reduce((acc, item) => acc + item.salePrice, 0),
-      //   // servidores: productos,
-      //   items: body.servidores.map(servidor => ({
-      //     name: servidor.name,
-      //     items: servidor.items.map(item => ({
-      //       // product: new ObjectId(item.productId),
-      //       product: productos,
-      //       cantidad: item.cantidad,
-      //       total: item.total,
-      //       fecha: new Date()
-      //     }))
-      //   })),
-      // }
+  
+      
+      const save = await parseOrder(body, businessId,user,results)
+      if (save.error) throw new BadRequest(save.error);
 
 
       const response = await db.collection("bar_orders").insertMany([save]);
