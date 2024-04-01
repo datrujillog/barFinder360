@@ -15,93 +15,116 @@ function orderRouter(app) {
     const router = express.Router();
 
     //instanciar el servicio
-    const roleServ = new OrderService();
+    const orderServ = new OrderService();
 
     app.use("/api/v1/order", router);
 //! Queda piente para continuar con el servicio de ordenes 
     
-    /** @description Devuelve la lista de ordenes de un negocio */
+    /** @description Devuelve la lista de ordenes de un negocio */ 
     
-    router.post("/create", async (req, res) => {
-        const businessId  = req.headers.businessid; 
-        const body = req.body;
-        const token = req.cookies.token;
-        const dataToken = await auth(token)
+    router.post("/create", async (req, res, next) => {
         try {
-            if(dataToken.businessId !== businessId) throw new BadRequest('Error de autenticacion')            
+            const businessId = req.headers.businessid;
+            const body = req.body;
+            const token = req.cookies.token;
+            const result = await auth(businessId, token);
+            if(!result.success) throw new BadRequest(result.error.message);
+            const user = result.data.id
+            const response = await orderServ.orderCreate(businessId, body,user)
+            response.success
+                ? authResponse(res, 201, true, "User created", {
+                    payload: response,
+                    token: token,
+                })
+                : errorResponse(res, response.error);
+
         } catch (error) {
-            return errorResponse(res, error.message)
-            
+            errorResponse(res, error.message);
         }
-        const response = await roleServ.orderCreate(businessId,body);
-        response.success
-            ? Responsee(res, 201, true, "Rol creado correctamente", { user: response.user })
-            : errorResponse(res, response.error.message);
     });
 
-
-    router.get("/getAll", async (req, res) => {
-        const businessId  = req.headers.businessid; 
-        const token = req.cookies.token;
-        const dataToken = await extractDataFromToken(token)
+    router.get("/list", async (req, res, next) => {
         try {
-            if(dataToken.businessId !== businessId) throw new BadRequest('Error de autenticacion')            
-        } catch (error) {
-            return errorResponse(res, error.message)
+            const businessId = req.headers.businessid;
+            const token = req.cookies.token;
+            const result = await auth(businessId, token);
+            if(!result.success) throw new BadRequest(result.error.message);
             
+            const response = await productServ.productList(businessId)
+            response.success
+                ? authResponse(res, 200, true, "User created", {
+                    payload: response,
+                    token: token,
+                })
+                : errorResponse(res, response.error);
+
+        } catch (error) {
+            errorResponse(res, error.message);
         }
-        const response = await roleServ.getAllOrders(req.body, token);
-        response.success
-            ? Responsee(res, 201, true, "Rol creado correctamente", { user: response.user })
-            : errorResponse(res, response.error.message);
     });
 
-    router.get("/getById", async (req, res) => {
-        const businessId  = req.headers.businessid; 
-        const token = req.cookies.token;
-        const dataToken = await extractDataFromToken(token)
+    router.get("/list/:id", async (req, res, next) => {
         try {
-            if(dataToken.businessId !== businessId) throw new BadRequest('Error de autenticacion')            
-        } catch (error) {
-            return errorResponse(res, error.message)
+            const businessId = req.headers.businessid;
+            const productId = req.params.id;
+            const token = req.cookies.token;
+            const result = await auth(businessId, token);
+            if(!result.success) throw new BadRequest(result.error.message);
             
+            const response = await productServ.productById(businessId,productId)
+            response.success
+                ? authResponse(res, 200, true, "User created", {
+                    payload: response,
+                    token: token,
+                })
+                : errorResponse(res, response.error);
+
+        } catch (error) {
+            errorResponse(res, error.message);
         }
-        const response = await roleServ.getOrderById(req.body, token);
-        response.success
-            ? Responsee(res, 201, true, "Rol creado correctamente", { user: response.user })
-            : errorResponse(res, response.error.message);
     });
 
-    router.put("/update", async (req, res) => {
-        const businessId  = req.headers.businessid; 
-        const token = req.cookies.token;
-        const dataToken = await extractDataFromToken(token)
+    router.put("/update/:id", async (req, res, next) => {
         try {
-            if(dataToken.businessId !== businessId) throw new BadRequest('Error de autenticacion')            
-        } catch (error) {
-            return errorResponse(res, error.message)
+            const businessId = req.headers.businessid;
+            const productId = req.params.id;
+            const body = req.body;
+            const token = req.cookies.token;
+            const result = await auth(businessId, token);
+            if(!result.success) throw new BadRequest(result.error.message);
             
+            const response = await productServ.productUpdate(businessId,productId,body)
+            response.success
+                ? authResponse(res, 200, true, "User created", {
+                    payload: response,
+                    token: token,
+                })
+                : errorResponse(res, response.error);
+
+        } catch (error) {
+            errorResponse(res, error.message);
         }
-        const response = await roleServ.updateOrder(req.body, token);
-        response.success
-            ? Responsee(res, 201, true, "Rol creado correctamente", { user: response.user })
-            : errorResponse(res, response.error.message);
     });
 
-    router.delete("/delete", async (req, res) => {
-        const businessId  = req.headers.businessid; 
-        const token = req.cookies.token;
-        const dataToken = await extractDataFromToken(token)
+    router.delete("/delete/:id", async (req, res, next) => {
         try {
-            if(dataToken.businessId !== businessId) throw new BadRequest('Error de autenticacion')            
-        } catch (error) {
-            return errorResponse(res, error.message)
+            const businessId = req.headers.businessid;
+            const productId = req.params.id;
+            const token = req.cookies.token;
+            const result = await auth(businessId, token);
+            if(!result.success) throw new BadRequest(result.error.message);
             
+            const response = await productServ.productDelete(businessId,productId)
+            response.success
+                ? authResponse(res, 200, true, "User created", {
+                    payload: response,
+                    token: token,
+                })
+                : errorResponse(res, response.error);
+
+        } catch (error) {
+            errorResponse(res, error.message);
         }
-        const response = await roleServ.deleteOrder(req.body, token);
-        response.success
-            ? Responsee(res, 201, true, "Rol creado correctamente", { user: response.user })
-            : errorResponse(res, response.error.message);
     });
 
 }
