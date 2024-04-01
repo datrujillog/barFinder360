@@ -45,33 +45,49 @@ class OrderService {
         try {
             const results = await db.collection('bar_orders').aggregate([
                 {
-                    $match: {
-                        businessId: new ObjectId(businessId),
-                    },
+                  $match: {
+                    businessId: new ObjectId(businessId),
+                  },
                 },
                 {
-                    $lookup: {
-                        from: "bar_products",
-                        localField: "productId",
-                        foreignField: "_id",
-                        as: "product",
-                    },
+                  $lookup: {
+                    from: "bar_products",
+                    localField: "productId",
+                    foreignField: "_id",
+                    as: "product",
+                  },
                 },
                 {
-                    $lookup: {
-                        from: "bar_business",
-                        localField: "businessId",
-                        foreignField: "_id",
-                        as: "business",
-                    },
+                  $lookup: {
+                    from: "bar_business",
+                    localField: "businessId",
+                    foreignField: "_id",
+                    as: "business",
+                  },
                 },
-            ]).toArray()
+                {
+                  $lookup: {
+                    from: "bar_tables",
+                    localField: "tableId",
+                    foreignField: "_id",
+                    as: "tables",
+                  },
+                },
+                {
+                  $lookup: {
+                    from: "bar_users",
+                    localField: "userId",
+                    foreignField: "_id",
+                    as: "users",
+                  },
+                },
+              ]).toArray()
 
             if (results.length === 0) throw new Error('Products not found');
 
             return {
                 success: true,
-                Products: results
+                order: results
             };
         } catch (error) {
             return { success: false, error };
