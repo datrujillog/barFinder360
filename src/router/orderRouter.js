@@ -50,7 +50,7 @@ function orderRouter(app) {
             const result = await auth(businessId, token); 
             if(!result.success) throw new BadRequest(result.error.message);
             
-            const response = await productServ.orderList(businessId)
+            const response = await orderServ.orderList(businessId)
             response.success
                 ? authResponse(res, 200, true, "Order List", {
                     payload: response,
