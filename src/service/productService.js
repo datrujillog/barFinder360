@@ -36,7 +36,39 @@ class ProductService {
 
     async productList(businessId) {
         try {
-            const results = await db.collection('bar_products').find({ businessId: new ObjectId(businessId) }).toArray();
+            // const results = await db.collection('bar_products').find({ businessId: new ObjectId(businessId) }).toArray();
+            const results = await db.collection('bar_products').aggregate([
+                {
+                  $match: {
+                    businessId: new ObjectId(businessId),
+                  },
+                },
+                {
+                  $lookup: {
+                    from: "bar_categories",
+                    localField: "categoryId",
+                    foreignField: "_id",
+                    as: "category",
+                  },
+                },
+                {
+                  $lookup: {
+                    from: "bar_business",
+                    localField: "businessId",
+                    foreignField: "_id",
+                    as: "business",
+                  },
+                },
+                {
+                  $lookup: {
+                    from: "bar_promotions",
+                    localField: "promotionsId",
+                    foreignField: "_id",
+                    as: "promotions",
+                  },
+                },
+              ]).toArray()     
+
             if (results.length === 0) throw new Error('Products not found');
 
             return {
