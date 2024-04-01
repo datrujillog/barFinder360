@@ -4,7 +4,7 @@ import express, { response } from "express";
 import BusinessService from "../service/businessService.js";
 import TableService from "../service/tableService.js";
 
-import { BadRequest } from "../middleware/errors.js"; 
+import { BadRequest } from "../middleware/errors.js";
 import { auth } from "../middleware/auth.js";
 
 import { errorResponse, authResponse, Responsee } from "../helper/response.js";
@@ -25,19 +25,16 @@ function TableRouter(app) {
             const data = req.body;
             const businessId = req.headers.businessid;
             const token = req.cookies.token;
-
-            const dataToken = await auth(token)
-
-            if (dataToken.businessId !== businessId) throw new BadRequest('Error de autenticacion')
+            const result = await auth(businessId,token)
+            if(!result.success) throw new BadRequest(result.error.message);
 
             const response = await tableServ.createTable(data, businessId);
 
-            response.success
-                ? authResponse(res, 201, true, "User created", {
-                    payload: response.data,
-                    token: token,
-                })
-                : errorResponse(res, response.error);
+            if (!response.success) throw new BadRequest(response.error.message);
+            authResponse(res, 201, true, "Table created", {
+                payload: response,
+                token: token,
+            });
         } catch (error) {
             errorResponse(res, error.message)
         }
@@ -47,18 +44,17 @@ function TableRouter(app) {
         try {
             const businessId = req.headers.businessid;
             const token = req.cookies.token;
-            const dataToken = await extractDataFromToken(token)
-
-            if (dataToken.businessId !== businessId) throw new BadRequest('Error de autenticacion')
+            const result = await auth(businessId, token);
+            if (!result.success) throw new BadRequest(result.error.message);
 
             const response = await tableServ.listTables(businessId);
 
-            response.success
-                ? authResponse(res, 200, true, "List of tables", {
-                    payload: response.data,
-                    token: token,
-                })
-                : errorResponse(res, response.error);
+            if (!response.success) throw new BadRequest(response.error.message);
+            authResponse(res, 201, true, "Table ", {
+                payload: response,
+                token: token,
+            });
+
         } catch (error) {
             errorResponse(res, error.message)
         }
