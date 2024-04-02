@@ -133,7 +133,7 @@ const parseProductUpdate = async (body, businessId) => {
 
 
 const parseOrder = async (body, businessId, user, results) => {
-    const requiredFields = ['tableId','servidores'];
+    const requiredFields = ['tableId', 'servidores'];
 
     try {
         for (const field of requiredFields) {
@@ -141,7 +141,7 @@ const parseOrder = async (body, businessId, user, results) => {
                 throw new BadRequest(`Falta el campo obligatorio: ${field}`);
             }
         }
- 
+
         const productos = results.map(producto => {
             const item = body.servidores.find(servidor => servidor.items.find(item => item.productId == producto._id.toString()))
             console.log(item)
@@ -169,7 +169,7 @@ const parseOrder = async (body, businessId, user, results) => {
             userId: new ObjectId(user._id),
             tableId: new ObjectId(body.tableId),
             status: 'PENDING',
-            total: productos.map(producto => producto.items.total).reduce((a, b) => a + b, 0), 
+            total: productos.map(producto => producto.items.total).reduce((a, b) => a + b, 0),
             servidores: productos,
         }
 
