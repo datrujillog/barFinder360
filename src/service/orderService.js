@@ -29,7 +29,7 @@ class OrderService {
       // validar si los productos existen en la base de datos
       const idsObjeto = productoPedido.map(id => new ObjectId(id));
       const results = await this.productServ.orderByIdproduct(businessId, idsObjeto)
-      if (results.error) throw new BadRequest(results.error); 
+      if (results.error) throw new BadRequest(results.error);
 
       // parsear los datos para guardar en la base de datos  
       const save = await parseOrder(body, businessId, user, results.Product)
@@ -60,7 +60,7 @@ class OrderService {
     }
   }
 
-  async orderList(businessId,userId) {
+  async orderList(businessId, userId) {
     try {
       const results = await db.collection('bar_orders').aggregate([
         {
@@ -169,11 +169,11 @@ class OrderService {
     }
   }
 
-    //!  falta actulizar el estado de la orden el precio si es modificado por el usuario el total de la orden
+  //!  falta actulizar el estado de la orden el precio si es modificado por el usuario el total de la orden
 
   async orderUpdate(businessId, orderId, body) {
     try {
-      const results = await db.collection('bar_orders').updateOne(
+            const results = await db.collection('bar_orders').updateOne(
         {
           businessId: new ObjectId(businessId),
           _id: new ObjectId(orderId)
