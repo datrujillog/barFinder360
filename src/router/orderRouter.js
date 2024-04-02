@@ -84,6 +84,7 @@ function orderRouter(app) {
         }
     });
 
+    //!  falta actulizar el estado de la orden el precio si es modificado por el usuario el total de la orden
     router.put("/update/:id", async (req, res, next) => {
         try {
             const businessId = req.headers.businessid;
@@ -93,13 +94,13 @@ function orderRouter(app) {
             const result = await auth(businessId, token);
             if(!result.success) throw new BadRequest(result.error.message);
             
-            const response = await productServ.productUpdate(businessId,productId,body)
-            response.success
-                ? authResponse(res, 200, true, "User created", {
-                    payload: response,
-                    token: token,
-                })
-                : errorResponse(res, response.error);
+            const response = await orderServ.orderUpdate(businessId,productId,body)
+
+            if(!response.success) throw new BadRequest(response.error.message);
+            authResponse(res, 200, true, "Order ok", {
+                payload: response,
+                token: token,
+            });
 
         } catch (error) {
             errorResponse(res, error.message);
@@ -114,13 +115,11 @@ function orderRouter(app) {
             const result = await auth(businessId, token);
             if(!result.success) throw new BadRequest(result.error.message);
             
-            const response = await productServ.productDelete(businessId,productId)
-            response.success
-                ? authResponse(res, 200, true, "User created", {
-                    payload: response,
-                    token: token,
-                })
-                : errorResponse(res, response.error);
+            const response = await orderServ.orderDelete(businessId,productId)
+            authResponse(res, 200, true, "Order ok", {
+                payload: response,
+                token: token,
+            });
 
         } catch (error) {
             errorResponse(res, error.message);
