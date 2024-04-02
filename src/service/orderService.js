@@ -188,7 +188,7 @@ class OrderService {
               const product = results.Product.find((product) => product._id.toString() === item.productId.toString());
               if (product) {
                 item.price = product.salePrice;
-                item.total = item.quantity * item.price;
+                item.total = item.cantidad * item.price;
               }
             }
           });
