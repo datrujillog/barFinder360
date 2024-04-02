@@ -6,7 +6,7 @@ import TableService from "./tableService.js";
 import { BadRequest } from "../middleware/errors.js";
 
 import db from "../database/db.js";
-import { parseOrder } from "../helper/normalizeData.js";
+import { parseOrder, parseOrderUpdate } from "../helper/normalizeData.js";
 
 class OrderService {
   constructor() {
@@ -169,38 +169,13 @@ class OrderService {
     }
   }
 
-  //!  falta actulizar el estado de la orden el precio si es modificado por el usuario el total de la orden
+  //! refactorizar esta funcion demaciada logica en una funcion 
 
   async orderUpdate(businessId, orderId, body) {
     try {
-      // check if the quantity has changed and update the total price accordingly
-      if (body.servidores) {
-        // get the product prices from the bar_products table
-        const productoPedido = body.servidores.flatMap((servidor) => servidor.items.map((item) => item.productId));
-        const idsObjeto = productoPedido.map((id) => new ObjectId(id));
-        const results = await this.productServ.orderByIdproduct(businessId, idsObjeto);
-        if (results.error) throw new BadRequest(results.error);
- 
-        // update the quantity and total price for each item
-        body.servidores.forEach((servidor) => {
-          servidor.items.forEach((item) => {
-            if (item.hasOwnProperty('cantidad')) {
-              const product = results.Product.find((product) => product._id.toString() === item.productId.toString());
-              if (product) {
-                item.price = product.salePrice;
-                item.total = item.cantidad * item.price;
-              }
-            }
-          });
-        });
-      }
+      
+      const save = await parseOrderUpdate(body, businessId)
 
-      // necesito actualizar  el total de body.total de los totales de los productos
-      const total = body.servidores.map(servidor => servidor.items.map(item => item.total).reduce((a, b) => a + b, 0)).reduce((a, b) => a + b, 0)
-
-      body.total = total
-
-      // update the order in the database
       const results = await db.collection('bar_orders').updateOne(
         {
           businessId: new ObjectId(businessId),
@@ -208,17 +183,15 @@ class OrderService {
         },
         {
           $set: {
-            ...body
+            ...save
           }
         }
       )
 
-      // check if the update was successful
       if (results.modifiedCount === 0) {
         throw new BadRequest('Products not found');
       }
 
-      // return the updated order
       return {
         success: true,
         order: results
