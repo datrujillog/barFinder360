@@ -195,6 +195,11 @@ class OrderService {
         });
       }
 
+      // necesito actualizar  el total de body.total de los totales de los productos
+      const total = body.servidores.map(servidor => servidor.items.map(item => item.total).reduce((a, b) => a + b, 0)).reduce((a, b) => a + b, 0)
+
+      body.total = total
+
       // update the order in the database
       const results = await db.collection('bar_orders').updateOne(
         {
