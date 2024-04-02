@@ -13,7 +13,7 @@ function authRouter(app) {
     //instanciar el servicio
     const authServ = new AuthService();
 
-    app.use("/api/auth", router);
+    app.use("/api/v1/auth", router);
 
     router.post("/login", async (req, res) => {
         // const data = req.body;
