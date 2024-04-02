@@ -47,12 +47,4 @@ app.use((error, req, res, next) => {
 
 
 
-//levantar el servidor
-
-
 export default app;
-
-// app.listen(config.port, () => {
-//   console.log("Server is running on port " + config.port);
-//   console.log("http://localhost:" + config.port + "/api/");
-// });
