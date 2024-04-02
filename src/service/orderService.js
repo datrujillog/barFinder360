@@ -173,7 +173,30 @@ class OrderService {
 
   async orderUpdate(businessId, orderId, body) {
     try {
-            const results = await db.collection('bar_orders').updateOne(
+      // check if the quantity has changed and update the total price accordingly
+      if (body.servidores) {
+        // get the product prices from the bar_products table
+        const productoPedido = body.servidores.flatMap((servidor) => servidor.items.map((item) => item.productId));
+        const idsObjeto = productoPedido.map((id) => new ObjectId(id));
+        const results = await this.productServ.orderByIdproduct(businessId, idsObjeto);
+        if (results.error) throw new BadRequest(results.error);
+ 
+        // update the quantity and total price for each item
+        body.servidores.forEach((servidor) => {
+          servidor.items.forEach((item) => {
+            if (item.hasOwnProperty('cantidad')) {
+              const product = results.Product.find((product) => product._id.toString() === item.productId.toString());
+              if (product) {
+                item.price = product.salePrice;
+                item.total = item.quantity * item.price;
+              }
+            }
+          });
+        });
+      }
+
+      // update the order in the database
+      const results = await db.collection('bar_orders').updateOne(
         {
           businessId: new ObjectId(businessId),
           _id: new ObjectId(orderId)
@@ -185,16 +208,38 @@ class OrderService {
         }
       )
 
-      if (results.modifiedCount === 0) throw new BadRequest('Products not found');
+      // check if the update was successful
+      if (results.modifiedCount === 0) {
+        throw new BadRequest('Products not found');
+      }
 
+      // return the updated order
       return {
         success: true,
         order: results
       };
     } catch (error) {
+      // return an error if something went wrong
       return { success: false, error };
     }
   }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   async orderDelete(businessId, orderId) {
     try {
