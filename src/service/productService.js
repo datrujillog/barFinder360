@@ -154,22 +154,20 @@ class ProductService {
         }
     }
 
-
-
-
     async orderByIdproduct(businessId, idsObjeto) {
         try {
-            const results = await db.collection('bar_products').aggregate([
-                {
-                    $match: {
-                        _id: { $in: idsObjeto },
-                        businessId: new ObjectId(businessId),
-                    }
-                },
-            ]).toArray();
+            let results = [];
+            for (let id of idsObjeto) {
+                const result = await db.collection('bar_products').findOne({
+                    _id: new ObjectId(id),
+                    businessId: new ObjectId(businessId),
+                });
 
-            if (results.length === 0) {
-                throw new Error('Products not found');
+                if (!result) {
+                    throw new Error(`Product not found for id ${id}`);
+                }
+
+                results.push(result);
             }
 
             return {
