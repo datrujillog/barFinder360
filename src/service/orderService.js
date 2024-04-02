@@ -29,9 +29,9 @@ class OrderService {
       // validar si los productos existen en la base de datos
       const idsObjeto = productoPedido.map(id => new ObjectId(id));
       const results = await this.productServ.orderByIdproduct(businessId, idsObjeto)
-      if (results.error) throw new BadRequest(results.error);
+      if (results.error) throw new BadRequest(results.error); 
 
-      // parsear los datos para guardar en la base de datos
+      // parsear los datos para guardar en la base de datos  
       const save = await parseOrder(body, businessId, user, results.Product)
       if (save.error) throw new BadRequest(save.error);
 
