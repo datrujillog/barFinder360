@@ -147,7 +147,7 @@ const parseOrder = async (body, businessId, user, results) => {
             console.log(item)
             const itemProducto = item.items.find(item => item.productId == producto._id.toString())
             return {
-                userId: user,
+                userId: new ObjectId(user),
                 items: {
                     productos: {
                         // name: producto.name,
@@ -157,7 +157,7 @@ const parseOrder = async (body, businessId, user, results) => {
                     cantidad: itemProducto.cantidad,
                     total: itemProducto.cantidad * producto.salePrice,
                     // total: itemProducto.total,
-                    user: user,
+                    user: new ObjectId(user),
                     fecha: new Date()
 
                 },
