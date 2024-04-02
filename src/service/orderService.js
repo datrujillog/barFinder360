@@ -3,13 +3,19 @@ import { ObjectId } from "bson";
 import ProductService from "./productService.js";
 import TableService from "./tableService.js";
 
+import OrderRepository from "../repositories/restaurantRepository.js";
+
 import { BadRequest } from "../middleware/errors.js";
 
 import db from "../database/db.js";
 import { parseOrder, parseOrderUpdate } from "../helper/normalizeData.js";
-
-class OrderService {
+class OrderService extends OrderRepository {
   constructor() {
+    super();
+
+    
+
+
     console.log('Order Service is created');
     this.productServ = new ProductService();
     this.tableServ = new TableService();
@@ -19,6 +25,8 @@ class OrderService {
 
   async orderCreate(businessId, body, user) {
     try {
+
+     if(body.servidores === undefined) throw new BadRequest('No se encontro la data en el body')
 
       const productoPedido = body.servidores.flatMap((servidor) => servidor.items.map((item) => item.productId))
 
@@ -35,20 +43,12 @@ class OrderService {
       const save = await parseOrder(body, businessId, user, results.Product)
       if (save.error) throw new BadRequest(save.error);
 
-      // guarda la orders en la base de datos 
-      const response = await db.collection("bar_orders").insertMany([save]);
-      if (response.acknowledged === false) throw new BadRequest("Error al insertar el pedido")
-
-
-      const insertedIds = response.insertedIds
-      const insertedData = Object.keys(insertedIds).map(key => ({
-        _id: insertedIds[key],
-        ...body
-      }));
+      const response = await this.createOrder(save)
+      if (response.error) throw new BadRequest(response.error);
 
       return {
         success: true,
-        order: insertedData
+        order: response
       }
 
 
@@ -169,12 +169,12 @@ class OrderService {
     }
   }
 
-  
+
   async orderUpdate(businessId, orderId, body) {
     try {
 
       const save = await parseOrderUpdate(body, businessId)
-      if(save.error) throw new BadRequest(save.error);
+      if (save.error) throw new BadRequest(save.error);
 
       const results = await db.collection('bar_orders').updateOne(
         {
