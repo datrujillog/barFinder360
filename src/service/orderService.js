@@ -96,7 +96,7 @@ class OrderService {
         {
           $lookup: {
             from: "bar_users",
-            localField: "userId",
+            localField: "servidores.userId",
             foreignField: "_id",
             as: "users",
           },
