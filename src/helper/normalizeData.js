@@ -2,6 +2,9 @@
 import { ObjectId } from 'mongodb';
 import log4js from 'log4js'
 import { BadRequest } from '../middleware/errors.js';
+import ProductService from '../service/productService.js';
+
+
 
 const log = log4js.getLogger(`${process.env.NODE_ENV} - normalizeData`);
 
@@ -146,7 +149,7 @@ const parseOrder = async (body, businessId, user, results) => {
             const item = body.servidores.find(servidor => servidor.items.find(item => item.productId == producto._id.toString()))
             console.log(item)
             const itemProducto = item.items.find(item => item.productId == producto._id.toString())
-            return { 
+            return {
                 userId: new ObjectId(user),
                 items: {
                     productos: {
@@ -181,10 +184,48 @@ const parseOrder = async (body, businessId, user, results) => {
 };
 
 
+const parseOrderUpdate = async (body, businessId) => {
+    try {
+        const productServ = new ProductService();
+
+        if (body.servidores) {
+            const productoPedido = body.servidores.flatMap((servidor) => servidor.items.map((item) => item.productId));
+            const idsObjeto = productoPedido.map((id) => new ObjectId(id));
+            const results = await productServ.orderByIdproduct(businessId, idsObjeto);
+            if (results.error) throw new BadRequest(results.error);
+
+            body.servidores.forEach((servidor) => {
+                servidor.items.forEach((item) => {
+                    if (item.hasOwnProperty('cantidad')) {
+                        const product = results.Product.find((product) => product._id.toString() === item.productId.toString());
+                        if (product) {
+                            item.price = product.salePrice;
+                            item.total = item.cantidad * item.price;
+                        }
+                    }
+                });
+            });
+        }
+
+        const total = body.servidores.map(servidor => servidor.items.map(item => item.total).reduce((a, b) => a + b, 0)).reduce((a, b) => a + b, 0)
+        body.total = total
+
+        return body
+
+    } catch (error) {
+        // return an error if something went wrong
+        return { success: false, error };
+    }
+
+}
+
+
+
 
 
 export {
     parseNewRols,
     parseProduct,
-    parseOrder
+    parseOrder,
+    parseOrderUpdate
 }
