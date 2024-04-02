@@ -2,8 +2,10 @@
 import express from "express";
 import morgan from "morgan";
 import cookie from "cookie-parser";
+import swaggerUi from 'swagger-ui-express';
+import swaggerJsdoc from 'swagger-jsdoc';
+import swaggerDocument from "./documentation/swagger.js";
 
-// import config from "./configs/config.js";
 
 
 //importar las rutas 
@@ -35,6 +37,10 @@ Table(app);
 Order(app);
 Category(app);
 Product(app);
+
+// ! configurando el swagger hay un error
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 
 
 
