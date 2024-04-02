@@ -30,16 +30,13 @@ class OrderService extends OrderRepository {
 
       const productoPedido = body.servidores.flatMap((servidor) => servidor.items.map((item) => item.productId))
 
-      //  validar si la mesa existe en la base de datos
       const table = await this.tableServ.tableByOne(businessId, body.tableId)
       if (table.error) throw new BadRequest(table.error);
 
-      // validar si los productos existen en la base de datos
       const idsObjeto = productoPedido.map(id => new ObjectId(id));
       const results = await this.productServ.orderByIdproduct(businessId, idsObjeto)
       if (results.error) throw new BadRequest(results.error);
 
-      // parsear los datos para guardar en la base de datos  
       const save = await parseOrder(body, businessId, user, results.Product)
       if (save.error) throw new BadRequest(save.error);
 
