@@ -169,12 +169,12 @@ class OrderService {
     }
   }
 
-  //! refactorizar esta funcion demaciada logica en una funcion 
-
+  
   async orderUpdate(businessId, orderId, body) {
     try {
-      
+
       const save = await parseOrderUpdate(body, businessId)
+      if(save.error) throw new BadRequest(save.error);
 
       const results = await db.collection('bar_orders').updateOne(
         {
