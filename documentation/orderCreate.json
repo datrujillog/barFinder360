@@ -1,0 +1,50 @@
+{
+    "_id": {
+      "$oid": "660ae718e96d0f20dc7e1e95"
+    },
+    "businessId": {
+      "$oid": "6608af95aa3ce6031feb3039"
+    },
+    "userId": {
+      "$oid": "660ae7185ccb9f036e45d615"
+    },
+    "tableId": {
+      "$oid": "660ae7185ccb9f036e45d616"
+    },
+    "status": "PENDING",
+    "total": {
+      "$numberDouble": "NaN"
+    },
+    "servidores": [
+      {
+        "items": {
+          "name": null,
+          "productos": {
+            "name": "Salchipapas d deleted",
+            "salePrice": 5000
+          },
+          "cantidad": 3,
+          "total": 15000,
+          "user": null,
+          "fecha": {
+            "$date": "2024-04-01T16:55:52.706Z"
+          }
+        }
+      },
+      {
+        "items": {
+          "name": null,
+          "productos": {
+            "name": "ejemplo # 2",
+            "salePrice": 10000
+          },
+          "cantidad": 2,
+          "total": 20000,
+          "user": null,
+          "fecha": {
+            "$date": "2024-04-01T16:55:52.711Z"
+          }
+        }
+      }
+    ]
+  }
