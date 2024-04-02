@@ -146,7 +146,7 @@ const parseOrder = async (body, businessId, user, results) => {
             const item = body.servidores.find(servidor => servidor.items.find(item => item.productId == producto._id.toString()))
             console.log(item)
             const itemProducto = item.items.find(item => item.productId == producto._id.toString())
-            return {
+            return { 
                 userId: new ObjectId(user),
                 items: {
                     productos: {
