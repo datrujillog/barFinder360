@@ -196,6 +196,26 @@ class OrderService {
     }
   }
 
+  async orderDelete(businessId, orderId) {
+    try {
+      const results = await db.collection('bar_orders').deleteOne(
+        {
+          businessId: new ObjectId(businessId),
+          _id: new ObjectId(orderId)
+        }
+      )
+
+      if (results.deletedCount === 0) throw new BadRequest('Products not found');
+
+      return {
+        success: true,
+        order: results
+      };
+    } catch (error) {
+      return { success: false, error };
+    }
+  }
+
 }
 
 export default OrderService;
