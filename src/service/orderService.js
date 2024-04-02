@@ -12,11 +12,6 @@ import { parseOrder, parseOrderUpdate } from "../helper/normalizeData.js";
 class OrderService extends OrderRepository {
   constructor() {
     super();
-
-
-
-
-    console.log('Order Service is created');
     this.productServ = new ProductService();
     this.tableServ = new TableService();
   }
