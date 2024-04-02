@@ -169,6 +169,33 @@ class OrderService {
     }
   }
 
+    //!  falta actulizar el estado de la orden el precio si es modificado por el usuario el total de la orden
+
+  async orderUpdate(businessId, orderId, body) {
+    try {
+      const results = await db.collection('bar_orders').updateOne(
+        {
+          businessId: new ObjectId(businessId),
+          _id: new ObjectId(orderId)
+        },
+        {
+          $set: {
+            ...body
+          }
+        }
+      )
+
+      if (results.modifiedCount === 0) throw new BadRequest('Products not found');
+
+      return {
+        success: true,
+        order: results
+      };
+    } catch (error) {
+      return { success: false, error };
+    }
+  }
+
 }
 
 export default OrderService;
