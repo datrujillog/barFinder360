@@ -13,7 +13,7 @@ class OrderService extends OrderRepository {
   constructor() {
     super();
 
-    
+
 
 
     console.log('Order Service is created');
@@ -24,36 +24,27 @@ class OrderService extends OrderRepository {
 
 
   async orderCreate(businessId, body, user) {
-    try {
 
-     if(body.servidores === undefined) throw new BadRequest('No se encontro la data en el body')
+    if (body.servidores === undefined) throw new BadRequest('No se encontro la data en el body')
 
-      const productoPedido = body.servidores.flatMap((servidor) => servidor.items.map((item) => item.productId))
+    const productoPedido = body.servidores.flatMap((servidor) => servidor.items.map((item) => item.productId))
 
-      const table = await this.tableServ.tableByOne(businessId, body.tableId)
-      if (table.error) throw new BadRequest(table.error);
+    const table = await this.tableServ.tableByOne(businessId, body.tableId)
+    if (table.error) throw new BadRequest(table.error);
 
-      const idsObjeto = productoPedido.map(id => new ObjectId(id));
-      const results = await this.productServ.orderByIdproduct(businessId, idsObjeto)
-      if (results.error) throw new BadRequest(results.error);
+    const idsObjeto = productoPedido.map(id => new ObjectId(id));
+    const results = await this.productServ.orderByIdproduct(businessId, idsObjeto)
+    if (results.error) throw new BadRequest(results.error);
 
-      const save = await parseOrder(body, businessId, user, results.Product)
-      if (save.error) throw new BadRequest(save.error);
+    const save = await parseOrder(body, businessId, user, results.Product)
+    if (save.error) throw new BadRequest(save.error);
 
-      const response = await this.createOrder(save)
-      if(!response.success) throw new BadRequest(response.error)
+    const response = await this.createOrder(save)
+    if (!response.success) throw new BadRequest(response.error)
 
-      return {
-        success: true,
-        order: response
-      }
-
-
-    } catch (error) {
-      return {
-        success: false,
-        error: error
-      }
+    return {
+      success: true,
+      order: response
     }
   }
 
