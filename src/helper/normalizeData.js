@@ -169,7 +169,7 @@ const parseOrder = async (body, businessId, user, results) => {
             userId: new ObjectId(user._id),
             tableId: new ObjectId(body.tableId),
             status: 'PENDING',
-            total: productos.reduce((acc, item) => acc + item.salePrice, 0),
+            total: productos.map(producto => producto.items.total).reduce((a, b) => a + b, 0), 
             servidores: productos,
         }
 
