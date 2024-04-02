@@ -153,31 +153,18 @@ class OrderService extends OrderRepository {
   }
 
 
-  async orderUpdate(businessId, orderId, body) {
+  async orderByUpdate(businessId, orderId, body) {
     try {
 
       const save = await parseOrderUpdate(body, businessId)
       if (save.error) throw new BadRequest(save.error);
 
-      const results = await db.collection('bar_orders').updateOne(
-        {
-          businessId: new ObjectId(businessId),
-          _id: new ObjectId(orderId)
-        },
-        {
-          $set: {
-            ...save
-          }
-        }
-      )
-
-      if (results.modifiedCount === 0) {
-        throw new BadRequest('Products not found');
-      }
+      const response = await this.orderUpdate(businessId, orderId, save)
+      if (!response.success) throw new BadRequest(response.error)
 
       return {
         success: true,
-        order: results
+        order: response
       };
     } catch (error) {
       // return an error if something went wrong
