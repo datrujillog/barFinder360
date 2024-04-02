@@ -44,7 +44,7 @@ class OrderService extends OrderRepository {
       if (save.error) throw new BadRequest(save.error);
 
       const response = await this.createOrder(save)
-      if (response.error) throw new BadRequest(response.error);
+      if(!response.success) throw new BadRequest(response.error)
 
       return {
         success: true,
