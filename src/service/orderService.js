@@ -45,7 +45,7 @@ class OrderService extends OrderRepository {
 
   async getListOrder(businessId, userId) {
 
-    const results = await this.orderList(businessId, userId)
+    const results = await this.listOrders(businessId, userId)
     if (!results.success) throw new BadRequest(results.error);
 
     return {
