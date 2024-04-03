@@ -35,7 +35,7 @@ const authResponse = async (res = response, status, ok, message, data) => {
   const { payload, token } = data;
   let exp;
   try {
-    exp = jwt.verify(data.token, config.jwtSecret).exp;
+    exp = jwt.verify(data.token.token, config.jwtSecret).exp;
   } catch (error) {
     return errorResponse(res, error);
   }

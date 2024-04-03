@@ -16,7 +16,9 @@ function authRouter(app) {
     app.use("/api/v1/auth", router);
 
     router.post("/login", async (req, res) => {
-        // const data = req.body;
+
+        try {
+            
         const response = await authServ.login(req.body);
 
         response.success
@@ -30,6 +32,9 @@ function authRouter(app) {
                 token: response.token,
             })
             : errorResponse(res, response.error);
+        } catch (error) {
+            errorResponse(res, error.message);
+        }
     });
 
     router.post("/signup", async (req, res) => {
