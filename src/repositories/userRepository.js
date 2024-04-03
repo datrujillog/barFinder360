@@ -14,9 +14,9 @@ class UserRepository {
     async createUsers(data) {
 
         try {
-            
+
             const results = await this.#userModel.collection('bar_users').insertMany([data]);
-            if(results.acknowledged === false) throw new BadRequest("Error al crear el usuario");
+            if (results.acknowledged === false) throw new BadRequest("Error al crear el usuario");
 
             const insertedIds = results.insertedIds;
             const insertedData = Object.keys(insertedIds).map(key => ({
@@ -34,169 +34,161 @@ class UserRepository {
         }
     }
 
-    async listOrders(businessId, userId) {
+    async findUserById(businessId, userId) {
+
         try {
-            const results = await this.orderModel.collection('bar_orders').aggregate([
+
+            const user = await this.#userModel.collection('bar_users').aggregate([
                 {
                     $match: {
-                        businessId: new ObjectId(businessId),
-                    },
+                        _id: new ObjectId(userId),
+                        businessId: new ObjectId(businessId)
+                    }
                 },
                 {
                     $lookup: {
-                        from: "bar_products",
-                        localField: "servidores.items.productos.productId",
-                        foreignField: "_id",
-                        as: "products",
-                        // as: "servidores.items.productos",
-                    },
+                        from: 'bar_business',
+                        localField: 'businessId',
+                        foreignField: '_id',
+                        as: 'business'
+                    }
                 },
                 {
                     $lookup: {
-                        from: "bar_business",
-                        localField: "businessId",
-                        foreignField: "_id",
-                        as: "business",
-                    },
-                },
-                {
-                    $lookup: {
-                        from: "bar_tables",
-                        localField: "tableId",
-                        foreignField: "_id",
-                        as: "tables",
-                    },
-                },
-                {
-                    $lookup: {
-                        from: "bar_users",
-                        localField: "servidores.userId",
-                        foreignField: "_id",
-                        as: "users",
-                    },
-                },
-            ]).toArray()
-
-            if (results.length === 0) throw new BadRequest('Products not found');
-
-            return {
-                success: true,
-                order: results
-            };
-
-        } catch (error) {
-            return { success: false, error };
-        }
-    }
-
-    async finfOrderById(businessId, orderId) {
-
-        try {
-
-            const results = await this.orderModel.collection('bar_orders').aggregate([
-                {
-                    $match: {
-                        businessId: new ObjectId(businessId),
-                        _id: new ObjectId(orderId)
-                    },
-                },
-                {
-                    $lookup: {
-                        from: "bar_products",
-                        localField: "servidores.items.productos.productId",
-                        foreignField: "_id",
-                        as: "products",
-                        // as: "servidores.items.productos",
-                    },
-                },
-                {
-                    $lookup: {
-                        from: "bar_business",
-                        localField: "businessId",
-                        foreignField: "_id",
-                        as: "business",
-                    },
-                },
-                {
-                    $lookup: {
-                        from: "bar_tables",
-                        localField: "tableId",
-                        foreignField: "_id",
-                        as: "tables",
-                    },
-                },
-                {
-                    $lookup: {
-                        from: "bar_users",
-                        localField: "servidores.userId",
-                        foreignField: "_id",
-                        as: "users",
-                    },
-                },
-            ]).toArray()
-
-            if (results.length === 0) throw new BadRequest('Products not found');
-
-            return {
-                success: true,
-                order: results
-            }
-
-        } catch (error) {
-            return { success: false, error };
-
-        }
-
-    }
-
-    async updateOrderById(businessId, orderId, save) {
-        try {
-            const results = await this.orderModel.collection('bar_orders').updateOne(
-                {
-                    businessId: new ObjectId(businessId),
-                    _id: new ObjectId(orderId)
-                },
-                {
-                    $set: {
-                        ...save
+                        from: 'bar_rols',
+                        localField: 'roleId',
+                        foreignField: '_id',
+                        as: 'role'
                     }
                 }
-            )
+            ]).toArray();
 
-            if (results.modifiedCount === 0) {
-                throw new BadRequest('No Ordenes para actualizar');
-            }
-            if (results.acknowledged === false) throw new BadRequest("Error al actualizar el pedido");
+            if (user.length === 0) throw new BadRequest('El usuario no existe');
 
             return {
                 success: true,
-                order: results
-            };
-        } catch (error) {
-            return { success: false, error };
-        }
-    }
-
-    async deleteOrders(businessId, orderId) {
-        try {
-            const results = await this.orderModel.collection('bar_orders').deleteOne(
-                {
-                    businessId: new ObjectId(businessId),
-                    _id: new ObjectId(orderId)
-                }
-            )
-
-            if (results.deletedCount === 0) throw new BadRequest('Products not found');
-
-            return {
-                success: true,
-                order: results
+                user
             }
 
         } catch (error) {
             return { success: false, error };
+
         }
+
     }
+
+
+
+
+
+
+
+
+    // async listOrders(businessId, userId) {
+    //     try {
+    //         const results = await this.orderModel.collection('bar_orders').aggregate([
+    //             {
+    //                 $match: {
+    //                     businessId: new ObjectId(businessId),
+    //                 },
+    //             },
+    //             {
+    //                 $lookup: {
+    //                     from: "bar_products",
+    //                     localField: "servidores.items.productos.productId",
+    //                     foreignField: "_id",
+    //                     as: "products",
+    //                     // as: "servidores.items.productos",
+    //                 },
+    //             },
+    //             {
+    //                 $lookup: {
+    //                     from: "bar_business",
+    //                     localField: "businessId",
+    //                     foreignField: "_id",
+    //                     as: "business",
+    //                 },
+    //             },
+    //             {
+    //                 $lookup: {
+    //                     from: "bar_tables",
+    //                     localField: "tableId",
+    //                     foreignField: "_id",
+    //                     as: "tables",
+    //                 },
+    //             },
+    //             {
+    //                 $lookup: {
+    //                     from: "bar_users",
+    //                     localField: "servidores.userId",
+    //                     foreignField: "_id",
+    //                     as: "users",
+    //                 },
+    //             },
+    //         ]).toArray()
+
+    //         if (results.length === 0) throw new BadRequest('Products not found');
+
+    //         return {
+    //             success: true,
+    //             order: results
+    //         };
+
+    //     } catch (error) {
+    //         return { success: false, error };
+    //     }
+    // }
+
+
+
+    // async updateOrderById(businessId, orderId, save) {
+    //     try {
+    //         const results = await this.orderModel.collection('bar_orders').updateOne(
+    //             {
+    //                 businessId: new ObjectId(businessId),
+    //                 _id: new ObjectId(orderId)
+    //             },
+    //             {
+    //                 $set: {
+    //                     ...save
+    //                 }
+    //             }
+    //         )
+
+    //         if (results.modifiedCount === 0) {
+    //             throw new BadRequest('No Ordenes para actualizar');
+    //         }
+    //         if (results.acknowledged === false) throw new BadRequest("Error al actualizar el pedido");
+
+    //         return {
+    //             success: true,
+    //             order: results
+    //         };
+    //     } catch (error) {
+    //         return { success: false, error };
+    //     }
+    // }
+
+    // async deleteOrders(businessId, orderId) {
+    //     try {
+    //         const results = await this.orderModel.collection('bar_orders').deleteOne(
+    //             {
+    //                 businessId: new ObjectId(businessId),
+    //                 _id: new ObjectId(orderId)
+    //             }
+    //         )
+
+    //         if (results.deletedCount === 0) throw new BadRequest('Products not found');
+
+    //         return {
+    //             success: true,
+    //             order: results
+    //         }
+
+    //     } catch (error) {
+    //         return { success: false, error };
+    //     }
+    // }
 }
 
 export default UserRepository;
