@@ -175,7 +175,7 @@ class OrderRepository {
 
     async deleteOrders(businessId, orderId) {
         try {
-            const results = await db.collection('bar_orders').deleteOne(
+            const results = await this.orderModel.collection('bar_orders').deleteOne(
                 {
                     businessId: new ObjectId(businessId),
                     _id: new ObjectId(orderId)
