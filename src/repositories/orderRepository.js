@@ -89,7 +89,7 @@ class OrderRepository {
 
         try {
 
-            const results = await db.collection('bar_orders').aggregate([
+            const results = await this.orderModel.collection('bar_orders').aggregate([
                 {
                     $match: {
                         businessId: new ObjectId(businessId),
@@ -132,6 +132,11 @@ class OrderRepository {
             ]).toArray()
 
             if (results.length === 0) throw new BadRequest('Products not found');
+
+            return {
+                success: true,
+                order: results
+            }
 
         } catch (error) {
             return { success: false, error };
