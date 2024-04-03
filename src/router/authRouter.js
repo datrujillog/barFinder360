@@ -18,43 +18,49 @@ function authRouter(app) {
     router.post("/login", async (req, res) => {
 
         try {
-            
-        const response = await authServ.login(req.body);
 
-        response.success
-            ? res.cookie("token", response.token, {
-                httpOnly: true,
-                expires: new Date(Date.now() + 1000 * 60 * 60 * 24), // 1 day
-                secure: false,
-            }) &&
-            authResponse(res, 201, true, "loggud", {
-                payload: response.result,
-                token: response.token,
-            })
-            : errorResponse(res, response.error);
+            const response = await authServ.login(req.body);
+
+            response.success
+                ? res.cookie("token", response.token, {
+                    httpOnly: true,
+                    expires: new Date(Date.now() + 1000 * 60 * 60 * 24), // 1 day
+                    secure: false,
+                }) &&
+                authResponse(res, 201, true, "loggud", {
+                    payload: response.result,
+                    token: response.token,
+                })
+                : errorResponse(res, response.error);
         } catch (error) {
             errorResponse(res, error.message);
         }
     });
 
     router.post("/signup", async (req, res) => {
-        const data = req.body;
-        // console.log(data)
-        const response = await authServ.signup(data);
 
-        response.success
-            ? Responsee(res, 201, true, "User created", {
-                payload: response.data,
-                token: response.token,
-            })
-            : errorResponse(res, response.error);
+        try {
+
+            const body = req.body;
+            const response = await authServ.signup(body);
+            if (!response.success) throw new BadRequest(response.error.message);
+
+            const { data,token } = response;
+            Responsee(res, 200, true, "Business create ", {
+                payload: data,
+                token,
+            });
+
+        } catch (error) {
+            errorResponse(res, error.message);
+        }
     });
 
 
 
 
 
-        
+
 
 }
 
