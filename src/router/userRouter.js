@@ -47,14 +47,26 @@ function businessRouter(app) {
     });
 
     router.get("/one/:id", async (req, res) => {
+
+        try {
         const businessId = req.headers.businessid;
         const userId = req.params.id;
         const token = req.cookies.token;
-        const dataToken = await extractDataFromToken(token)
+        
+        const result = await auth(businessId, token);
+        if(!result.success) throw new BadRequest(result.error.message);
+
         const response = await userServ.userByOne(businessId, userId);
-        response.success
-            ? Responsee(res, 200, true, "Usuario encontrado", { user: response.user })
-            : errorResponse(res, response.error.message);
+        if(!response.success) throw new BadRequest(response.error.message);
+
+        authResponse(res, 200, true, "Order ok", {
+            payload: response,
+            token: token,
+        });
+
+        } catch (error) {
+            errorResponse(res, error.message);
+        }
     });
 
 }
