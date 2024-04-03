@@ -34,7 +34,7 @@ class OrderService extends OrderRepository {
     const save = await parseOrder(body, businessId, user, results.Product)
     if (save.error) throw new BadRequest(save.error);
 
-    const response = await this.createOrder(save)
+    const response = await this.createOrders(save)
     if (!response.success) throw new BadRequest(response.error)
 
     return {
