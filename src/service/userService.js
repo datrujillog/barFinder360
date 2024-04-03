@@ -18,28 +18,22 @@ class UserService extends UserRepository {
 
 
     async createUser(businessId, data) {
-        try {
-            const business = await this.businessServ.businessById(businessId);
-            if (!business.success) throw new Error('Business not found');
+        const business = await this.businessServ.businessById(businessId);
+        if (!business.success) throw new Error('Business not found');
 
-            data.businessId = new ObjectId(businessId);
-            data.roleId = new ObjectId(data.roleId);
+        data.businessId = new ObjectId(businessId);
+        data.roleId = new ObjectId(data.roleId);
 
-            const roleExist = await this.roleServ.roleById(businessId, data.roleId.toString());
-            if (!roleExist.success) throw new BadRequest(roleExist.error);
+        const roleExist = await this.roleServ.roleById(businessId, data.roleId.toString());
+        if (!roleExist.success) throw new BadRequest(roleExist.error);
 
-            const results = await this.createUsers(data);
-            if (!results.success) throw new BadRequest(results.error);
-            const { user } = results;
-            return {
-                success: true,
-                user
-            };
-        } catch (error) {
-            return { success: false, error };
-        }
-
-
+        const results = await this.createUsers(data);
+        if (!results.success) throw new BadRequest(results.error);
+        const { user } = results;
+        return {
+            success: true,
+            user
+        };
     }
 
     async userByOne(businessId, userId) {
@@ -57,9 +51,9 @@ class UserService extends UserRepository {
 
     async byEmailUser(data) {
         try {
-            
+
             const results = await this.findUserByEmail(data);
-            if(!results.success) throw new BadRequest(user.error);
+            if (!results.success) throw new BadRequest(user.error);
             const { user } = results;
             return {
                 success: true,
