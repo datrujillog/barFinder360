@@ -37,24 +37,17 @@ class RoleService {
 
     // ! aqui estoy desarrollando validar  que solo el negocio que inicio sesion pueda crear roles
 
-    async roleById(roleId) {
+    async roleById(businessId,roleId) {
 
         try {
-            // buscar el id del rol en la base de datos
-            const role = await db.collection('bar_rols').find({ _id: new ObjectId(roleId) }).toArray();
-
-            console.log(role);
-
-            if (role.length === 0) {
-                throw new BadRequest('Role not found');
-            }
-
+            const role = await db.collection('bar_rols').find({ _id: new ObjectId(roleId), businessId: new ObjectId(businessId) }).toArray();
+            if (role.length === 0) throw new BadRequest('Role not found');
+            
             return {
                 success: true,
                 role
             };
-
-
+            
         } catch (error) {
             return { success: false, error: error };
         }
