@@ -30,8 +30,8 @@ function orderRouter(app) {
             const user = result.data.id
             
             const response = await orderServ.orderCreate(businessId, body,user)
-
             if(!response.success) throw new BadRequest(response.error.message);
+            
             authResponse(res, 201, true, "Order created", {
                 payload: response,
                 token: token,
@@ -51,8 +51,8 @@ function orderRouter(app) {
             const userId = result.data.id
             
             const response = await orderServ.getListOrder(businessId,userId)
-
             if(!response.success) throw new BadRequest(response.error.message);
+
             authResponse(res, 200, true, "Order ok", {
                 payload: response,
                 token: token,
@@ -72,8 +72,8 @@ function orderRouter(app) {
             if(!result.success) throw new BadRequest(result.error.message);
             
             const response = await orderServ.getOrderById(businessId,productId)
-
             if(!response.success) throw new BadRequest(response.error.message);
+            
             authResponse(res, 200, true, "Order ok", {
                 payload: response,
                 token: token,
@@ -95,6 +95,7 @@ function orderRouter(app) {
             if(!result.success) throw new BadRequest(result.error.message);
             
             const response = await orderServ.orderByUpdate(businessId,productId,body)
+            if (!response.success) throw new BadRequest(response.error.message);
 
             if(!response.success) throw new BadRequest(response.error.message);
             authResponse(res, 200, true, "Order ok", {
@@ -116,6 +117,8 @@ function orderRouter(app) {
             if(!result.success) throw new BadRequest(result.error.message);
             
             const response = await orderServ.orderDelete(businessId,productId)
+            if(!response.success) throw new BadRequest(response.error.message);
+
             authResponse(res, 200, true, "Order ok", {
                 payload: response,
                 token: token,

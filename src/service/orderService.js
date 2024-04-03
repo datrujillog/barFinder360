@@ -87,33 +87,10 @@ class OrderService extends OrderRepository {
     }
   }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   async orderDelete(businessId, orderId) {
     try {
-      const results = await db.collection('bar_orders').deleteOne(
-        {
-          businessId: new ObjectId(businessId),
-          _id: new ObjectId(orderId)
-        }
-      )
-
-      if (results.deletedCount === 0) throw new BadRequest('Products not found');
+      const results = await this.deleteOrders(businessId, orderId)
+      if (!results.success) throw new BadRequest(response.error)
 
       return {
         success: true,
