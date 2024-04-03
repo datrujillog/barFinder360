@@ -32,7 +32,7 @@ function businessRouter(app) {
             if (!result.success) throw new BadRequest(result.error.message);
 
             const response = await userServ.createUser(businessId, body);
-            if (!response.success) throw new BadRequest(response.error.message); 
+            if (!response.success) throw new BadRequest(response.error.message);
 
             const { user } = response;
             authResponse(res, 201, true, "User created", {
@@ -49,20 +49,20 @@ function businessRouter(app) {
     router.get("/one/:id", async (req, res) => {
 
         try {
-        const businessId = req.headers.businessid;
-        const userId = req.params.id;
-        const token = req.cookies.token;
-        
-        const result = await auth(businessId, token);
-        if(!result.success) throw new BadRequest(result.error.message);
+            const businessId = req.headers.businessid;
+            const userId = req.params.id;
+            const token = req.cookies.token;
 
-        const response = await userServ.userByOne(businessId, userId);
-        if(!response.success) throw new BadRequest(response.error.message);
+            const result = await auth(businessId, token);
+            if (!result.success) throw new BadRequest(result.error.message);
 
-        authResponse(res, 200, true, "Order ok", {
-            payload: response,
-            token: token,
-        });
+            const response = await userServ.userByOne(businessId, userId);
+            if (!response.success) throw new BadRequest(response.error.message);
+            const { user } = response;
+            authResponse(res, 200, true, "Order ok", {
+                payload: user,
+                token: token,
+            });
 
         } catch (error) {
             errorResponse(res, error.message);
