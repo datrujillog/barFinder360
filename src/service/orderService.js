@@ -43,58 +43,16 @@ class OrderService extends OrderRepository {
     }
   }
 
-  async orderList(businessId, userId) {
-    try {
-      const results = await db.collection('bar_orders').aggregate([
-        {
-          $match: {
-            businessId: new ObjectId(businessId),
-          },
-        },
-        {
-          $lookup: {
-            from: "bar_products",
-            localField: "servidores.items.productos.productId",
-            foreignField: "_id",
-            as: "products",
-            // as: "servidores.items.productos",
-          },
-        },
-        {
-          $lookup: {
-            from: "bar_business",
-            localField: "businessId",
-            foreignField: "_id",
-            as: "business",
-          },
-        },
-        {
-          $lookup: {
-            from: "bar_tables",
-            localField: "tableId",
-            foreignField: "_id",
-            as: "tables",
-          },
-        },
-        {
-          $lookup: {
-            from: "bar_users",
-            localField: "servidores.userId",
-            foreignField: "_id",
-            as: "users",
-          },
-        },
-      ]).toArray()
+  async listOrder(businessId, userId) {
 
-      if (results.length === 0) throw new BadRequest('Products not found');
+    const results = await this.orderList(businessId, userId)
+    if (!results.success) throw new BadRequest(results.error);
 
-      return {
-        success: true,
-        order: results
-      };
-    } catch (error) {
-      return { success: false, error };
-    }
+    return {
+      success: true,
+      order: results
+    };
+
   }
 
   async orderById(businessId, orderId) {
