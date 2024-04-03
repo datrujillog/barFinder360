@@ -31,7 +31,7 @@ function orderRouter(app) {
             
             const response = await orderServ.orderCreate(businessId, body,user)
             if(!response.success) throw new BadRequest(response.error.message);
-            
+
             authResponse(res, 201, true, "Order created", {
                 payload: response,
                 token: token,
@@ -84,7 +84,6 @@ function orderRouter(app) {
         }
     });
 
-    //!  falta actulizar el estado de la orden el precio si es modificado por el usuario el total de la orden
     router.put("/update/:id", async (req, res, next) => {
         try {
             const businessId = req.headers.businessid;
