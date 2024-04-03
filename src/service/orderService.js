@@ -3,7 +3,7 @@ import { ObjectId } from "bson";
 import ProductService from "./productService.js";
 import TableService from "./tableService.js";
 
-import OrderRepository from "../repositories/restaurantRepository.js";
+import OrderRepository from "../repositories/orderRepository.js";
 
 import { BadRequest } from "../middleware/errors.js";
 
@@ -43,7 +43,7 @@ class OrderService extends OrderRepository {
     }
   }
 
-  async listOrder(businessId, userId) {
+  async getListOrder(businessId, userId) {
 
     const results = await this.orderList(businessId, userId)
     if (!results.success) throw new BadRequest(results.error);
@@ -55,51 +55,9 @@ class OrderService extends OrderRepository {
 
   }
 
-  async orderById(businessId, orderId) {
+  async getOrderById(businessId, orderId) {
     try {
-      const results = await db.collection('bar_orders').aggregate([
-        {
-          $match: {
-            businessId: new ObjectId(businessId),
-            _id: new ObjectId(orderId)
-          },
-        },
-        {
-          $lookup: {
-            from: "bar_products",
-            localField: "servidores.items.productos.productId",
-            foreignField: "_id",
-            as: "products",
-            // as: "servidores.items.productos",
-          },
-        },
-        {
-          $lookup: {
-            from: "bar_business",
-            localField: "businessId",
-            foreignField: "_id",
-            as: "business",
-          },
-        },
-        {
-          $lookup: {
-            from: "bar_tables",
-            localField: "tableId",
-            foreignField: "_id",
-            as: "tables",
-          },
-        },
-        {
-          $lookup: {
-            from: "bar_users",
-            localField: "servidores.userId",
-            foreignField: "_id",
-            as: "users",
-          },
-        },
-      ]).toArray()
-
-      if (results.length === 0) throw new BadRequest('Products not found');
+      const results = await this.finfOrderById(businessId, orderId)
 
       return {
         success: true,
@@ -110,14 +68,13 @@ class OrderService extends OrderRepository {
     }
   }
 
-
   async orderByUpdate(businessId, orderId, body) {
     try {
 
       const save = await parseOrderUpdate(body, businessId)
       if (save.error) throw new BadRequest(save.error);
 
-      const response = await this.orderUpdate(businessId, orderId, save)
+      const response = await this.updateOrderById(businessId, orderId, save)
       if (!response.success) throw new BadRequest(response.error)
 
       return {
