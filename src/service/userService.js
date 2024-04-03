@@ -46,7 +46,7 @@ class UserService extends UserRepository {
 
         const results = await this.findUserById(businessId, userId);
         if (!results.success) throw new BadRequest(results.error);
-        
+
         const { user } = results
         return {
             success: true,
@@ -55,22 +55,12 @@ class UserService extends UserRepository {
 
     }
 
-
-
-
-
-
-
-
     async byEmailUser(data) {
         try {
-            const user = await db.collection('bar_users').find({ email: data }).toArray();
-
-            if (user.length === 0) {
-                throw new BadRequest('El Email no existe');
-
-            }
-
+            
+            const results = await this.findUserByEmail(data);
+            if(!results.success) throw new BadRequest(user.error);
+            const { user } = results;
             return {
                 success: true,
                 user
