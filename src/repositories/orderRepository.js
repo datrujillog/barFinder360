@@ -10,7 +10,7 @@ class OrderRepository {
         this.orderModel = OrderModel;
     }
 
-    async createOrder(data) {
+    async createOrders(data) {
         try {
             const results = await this.orderModel.collection("bar_orders").insertMany([data]);
             if (results.acknowledged === false) throw new BadRequest("Error al insertar el pedido");
@@ -173,7 +173,7 @@ class OrderRepository {
         }
     }
 
-    async deleteOrder(businessId, orderId) {
+    async deleteOrders(businessId, orderId) {
         try {
             
         } catch (error) {
