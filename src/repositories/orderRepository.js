@@ -30,7 +30,7 @@ class OrderRepository {
         }
     }
 
-    async orderList(businessId, userId) {
+    async listOrders(businessId, userId) {
         try {
             const results = await this.orderModel.collection('bar_orders').aggregate([
                 {
@@ -168,6 +168,14 @@ class OrderRepository {
                 success: true,
                 order: results
             };
+        } catch (error) {
+            return { success: false, error };
+        }
+    }
+
+    async deleteOrder(businessId, orderId) {
+        try {
+            
         } catch (error) {
             return { success: false, error };
         }
