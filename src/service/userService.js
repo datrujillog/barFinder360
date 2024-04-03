@@ -53,7 +53,7 @@ class UserService extends UserRepository {
         try {
 
             const results = await this.findUserByEmail(data);
-            if (!results.success) throw new BadRequest(user.error);
+            if (!results.success) throw new BadRequest(results.error);
             const { user } = results;
             return {
                 success: true,
