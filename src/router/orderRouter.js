@@ -50,7 +50,7 @@ function orderRouter(app) {
             if(!result.success) throw new BadRequest(result.error.message);
             const userId = result.data.id
             
-            const response = await orderServ.listOrder(businessId,userId)
+            const response = await orderServ.getListOrder(businessId,userId)
 
             if(!response.success) throw new BadRequest(response.error.message);
             authResponse(res, 200, true, "Order ok", {
