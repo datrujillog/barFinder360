@@ -71,7 +71,7 @@ function orderRouter(app) {
             const result = await auth(businessId, token);
             if(!result.success) throw new BadRequest(result.error.message);
             
-            const response = await orderServ.orderById(businessId,productId)
+            const response = await orderServ.getOrderById(businessId,productId)
 
             if(!response.success) throw new BadRequest(response.error.message);
             authResponse(res, 200, true, "Order ok", {
