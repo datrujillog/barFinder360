@@ -25,23 +25,26 @@ class AuthService {
     }
 
     async login(data) {
+        
         try {
 
 
-            const user = await this.UserServ.byEmailUser(data.email);
-            if (!user.success) throw new BadRequest(user.error); 
+            const users = await this.UserServ.byEmailUser(data.email);
+            if (!users.success) throw new BadRequest(user.error); 
 
-
-            const isMatch = await comparePassword(data.password, user.user[0].password);
+            const { user } = users;
+            const isMatch = await comparePassword(data.password, user[0].password);
             if (!isMatch) {
-                return { success: false, error: 'Invalid password' };
+                throw new BadRequest('Invalid password');
             }
-            const token = await createToken(user.user[0]);
-            const result = user.user[0];
+            const token = await createToken(user[0]);
+            if(!token.success) throw new BadRequest(token.error);
+
+            const result = user[0];
             return {
                 success: true,
                 result,
-                token:token
+                token
             };
 
         } catch (error) {
