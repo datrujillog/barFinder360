@@ -2,10 +2,10 @@
 import { ObjectId } from "bson";
 import db from "../database/db.js";
 import { BadRequest } from "../middleware/errors.js";
-import businnessRepository from "../repositories/businessRepository.js";
+import BusinessRepository from "../repositories/businessRepository.js";
 
 
-class BusinessService extends businnessRepository {
+class BusinessService extends BusinessRepository {
     constructor() {
         super();
 
@@ -17,9 +17,7 @@ class BusinessService extends businnessRepository {
 
             const business = await this.findBusinessById();
             if (!business.success) throw new BadRequest(business.error.message);
-            // const businesses = await db.collection('bar_business').find().toArray();
-            // const cout = await db.collection('bar_business').find().count();
-
+           
             return {
                 success: true,
                 business
@@ -32,12 +30,9 @@ class BusinessService extends businnessRepository {
 
     async byEmailBusiness(data) {
         try {
-            const business = await db.collection('bar_business').find({ email: data }).toArray();
 
-            if (business.length === 0) {
-                throw new Error('Business not found');
-                // return { success: false, error: 'Business not found' };
-            }
+            const business = await this.byEmailBusiness(email);
+            if(!business.success) throw new BadRequest(business.error.message);
 
             return {
                 success: true,
@@ -51,20 +46,11 @@ class BusinessService extends businnessRepository {
 
     async businessById(businessId) {
 
-        const dataUser = await db.collection('bar_business').findOne({ _id: new ObjectId(businessId) });
-
-        if (dataUser.length === 0 || dataUser === null) {
-            throw new BadRequest("usuario no existe", "usuarioNoExiste")
-        }
-        let userData = dataUser;
-        // let roles = userData.roles[0];
-        // let users = userData.users[0];
-
-        delete userData['password'];
-        // delete roles['password'];
-        // delete users['password'];
-
-        // console.log(userData);
+        const results = await this.findBusinessById(businessId);
+        if(!results.success) throw new BadRequest(results.error.message);
+        
+        const { business } = results;   
+        delete business['password'];
 
         return {
             success: true,
