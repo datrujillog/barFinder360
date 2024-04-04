@@ -16,13 +16,26 @@ function businessRouter(app) {
 
     app.use("/api/v1/business", router);
 
-    router.get("/", async (req, res) => {
+
+    router.get("/list", async (req, res) => {
         try {
-            // const data = req.body;
+
+            const businessId = req.headers.businessid;
+            const token = req.cookies.token;
+
+            const result = await auth(businessId, token);
+            if(!result.success) throw new BadRequest(result.error);
+
             const response = await businessServ.getBusinesses();
-            response.success ? res.status(201).json({ response }) : res.status(400).json({ error: response.error.message });
+            if (!response.success) throw new BadRequest(response.error.message);
+
+            authResponse(res, 200, true, "Business ok", {
+                payload: response,
+                token: token,
+            });
+
         } catch (error) {
-            res.status(400).json({ message: error.message });
+            errorResponse(res, error.message)
         }
     });
 
