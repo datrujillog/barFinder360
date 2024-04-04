@@ -2,16 +2,15 @@ import express, { response } from "express";
 
 import BusinessService from "../service/businessService.js";
 
-import { errorResponse, authResponse, Responsee } from "../helper/response.js";
-// import { extractDataFromToken } from "../helper/auth.js";
 import { auth } from "../middleware/auth.js";
 import { BadRequest } from "../middleware/errors.js";
-// import { valitorUserSignup } from "../middleware/express-validator.js";
+
+import { errorResponse, authResponse, Responsee } from "../helper/response.js";
+
 
 function businessRouter(app) {
     const router = express.Router();
 
-    //instanciar el servicio
     const businessServ = new BusinessService();
 
     app.use("/api/v1/business", router);
@@ -20,7 +19,8 @@ function businessRouter(app) {
     router.get("/list", async (req, res) => {
         try {
 
-            const businessId = req.headers.businessid;
+            // const businessId = req.headers.businessId;
+            const businessId = req.headers.businessid; 
             const token = req.cookies.token;
 
             const result = await auth(businessId, token);
