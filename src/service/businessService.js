@@ -3,11 +3,13 @@ import { ObjectId } from "bson";
 import db from "../database/db.js";
 import { BadRequest } from "../middleware/errors.js";
 import BusinessRepository from "../repositories/businessRepository.js";
-
+import UserRepository from "../repositories/userRepository.js";
 
 class BusinessService extends BusinessRepository {
     constructor() {
         super();
+
+        this.userRepository = new UserRepository();
 
     }
 
@@ -17,7 +19,7 @@ class BusinessService extends BusinessRepository {
 
             const business = await this.findBusinessById();
             if (!business.success) throw new BadRequest(business.error.message);
-           
+
             return {
                 success: true,
                 business
@@ -31,8 +33,8 @@ class BusinessService extends BusinessRepository {
     async byEmailBusiness(data) {
         try {
 
-            const business = await this.byEmailBusiness(email);
-            if(!business.success) throw new BadRequest(business.error.message);
+            const business = await this.emailByBusiness(email);
+            if (!business.success) throw new BadRequest(business.error.message);
 
             return {
                 success: true,
@@ -47,9 +49,9 @@ class BusinessService extends BusinessRepository {
     async businessById(businessId) {
 
         const results = await this.findBusinessById(businessId);
-        if(!results.success) throw new BadRequest(results.error.message);
-        
-        const { business } = results;   
+        if (!results.success) throw new BadRequest(results.error.message);
+
+        const { business } = results;
         delete business['password'];
 
         return {
@@ -61,42 +63,16 @@ class BusinessService extends BusinessRepository {
 
 
     async usersByBusiness(businessId, idBusiness) {
+
         try {
-            const users = await db.collection('bar_users').aggregate([
-                {
-                    $match: {
-                        businessId: new ObjectId(businessId),
-                    }
-                },
-                {
-                    $lookup: {
-                        from: "bar_rols",
-                        localField: "roleId",
-                        foreignField: "_id",
-                        as: "role"
-                    }
-                },
-                {
-                    $lookup: {
-                        from: "bar_business",
-                        localField: "businessId",
-                        foreignField: "_id",
-                        as: "business"
-                    }
-                }
-            ]).toArray();
 
-
-            if (users.length === 0) {
-                // return { success: false, messages: 'No users found'};
-                throw new BadRequest('No users found', 'noUsersFound');
-            }
-            for (let i in users) {
-                delete users[i].password;
-            }
-
+            const results = await this.userRepository.findUserByBusiness(businessId);
+            if (!results.success) throw new BadRequest(results.error.message);
+            
+            const { users, count } = results;
             return {
                 success: true,
+                count,
                 users
             };
 
