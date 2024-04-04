@@ -2,8 +2,10 @@
 import express from "express";
 import morgan from "morgan";
 import cookie from "cookie-parser";
+import swaggerUi from 'swagger-ui-express';
+import swaggerJsdoc from 'swagger-jsdoc';
+import swaggerDocument from "./documentation/swagger.js";
 
-// import config from "./configs/config.js";
 
 
 //importar las rutas 
@@ -26,7 +28,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true })); 
 app.use(cookie());
 
-//utilizar rutas
+//# utilizar rutas
 Auth(app);
 Business(app);
 User(app);
@@ -35,6 +37,10 @@ Table(app);
 Order(app);
 Category(app);
 Product(app);
+
+
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 
 
 
@@ -47,12 +53,4 @@ app.use((error, req, res, next) => {
 
 
 
-//levantar el servidor
-
-
 export default app;
-
-// app.listen(config.port, () => {
-//   console.log("Server is running on port " + config.port);
-//   console.log("http://localhost:" + config.port + "/api/");
-// });

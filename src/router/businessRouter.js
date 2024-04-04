@@ -2,44 +2,61 @@ import express, { response } from "express";
 
 import BusinessService from "../service/businessService.js";
 
-import { errorResponse, authResponse, Responsee } from "../helper/response.js";
-// import { extractDataFromToken } from "../helper/auth.js";
 import { auth } from "../middleware/auth.js";
 import { BadRequest } from "../middleware/errors.js";
-// import { valitorUserSignup } from "../middleware/express-validator.js";
+
+import { errorResponse, authResponse, Responsee } from "../helper/response.js";
+
 
 function businessRouter(app) {
     const router = express.Router();
 
-    //instanciar el servicio
     const businessServ = new BusinessService();
 
     app.use("/api/v1/business", router);
 
-    router.get("/", async (req, res) => {
+
+    router.get("/list", async (req, res) => {
         try {
-            // const data = req.body;
+
+            // const businessId = req.headers.businessId;
+            const businessId = req.headers.businessid;
+            const token = req.cookies.token;
+
+            const result = await auth(businessId, token);
+            if (!result.success) throw new BadRequest(result.error);
+
             const response = await businessServ.getBusinesses();
-            response.success ? res.status(201).json({ response }) : res.status(400).json({ error: response.error.message });
+            if (!response.success) throw new BadRequest(response.error.message);
+
+            authResponse(res, 200, true, "Business ok", {
+                payload: response,
+                token: token,
+            });
+
         } catch (error) {
-            res.status(400).json({ message: error.message });
+            errorResponse(res, error.message)
         }
     });
 
     router.get("/one/:id", async (req, res) => {
+
         try {
-            const businessId = req.params.id;
-            const response = await businessServ.businessById(businessId);
 
-            if (response.success) {
-                res.json({
-                    ok: true,
-                    business: response.business
-                });
+            const businessId = req.headers.businessid;
+            const Idbusiness = req.params.id
+            const token = req.cookies.token;
 
-            }
+            const result = await auth(businessId, token);
+            if (!result.success) throw new BadRequest(result.error);
 
-
+            const response = await businessServ.businessById(businessId, Idbusiness);
+            if (!response.success) throw new BadRequest(response.error.message);
+            const { business } = response;
+            authResponse(res, 200, true, "Business ok", {
+                payload: business,
+                token: token,
+            });
 
         } catch (error) {
             // res.status(400).json({ message: error.message });
@@ -53,19 +70,20 @@ function businessRouter(app) {
             const businessId = req.headers.businessid;
             const idBusiness = req.params.id;
             const token = req.cookies.token;
-            const dataToken = await auth(token)
 
-            if (dataToken.businessId !== businessId) throw new BadRequest('Error de autenticacion')
+            const result = await auth(businessId, token);
+            if (!result.success) throw new BadRequest(result.error);
 
             const response = await businessServ.usersByBusiness(businessId, idBusiness);
+            if (!response.success) throw new BadRequest(response.error.message);
 
-            if (response.success) {
-                res.json({
-                    ok: true,
-                    users: response.users
-                });
+            const { users,count } = response;
+            authResponse(res, 200, true, "Business user ok", {
+                payload: users,
+                count: count,
+                token: token,
+            });
 
-            }
         } catch (error) {
             errorResponse(res, error.message)
         }

@@ -30,8 +30,8 @@ function orderRouter(app) {
             const user = result.data.id
             
             const response = await orderServ.orderCreate(businessId, body,user)
-
             if(!response.success) throw new BadRequest(response.error.message);
+
             authResponse(res, 201, true, "Order created", {
                 payload: response,
                 token: token,
@@ -50,9 +50,9 @@ function orderRouter(app) {
             if(!result.success) throw new BadRequest(result.error.message);
             const userId = result.data.id
             
-            const response = await orderServ.orderList(businessId,userId)
-
+            const response = await orderServ.getListOrder(businessId,userId)
             if(!response.success) throw new BadRequest(response.error.message);
+
             authResponse(res, 200, true, "Order ok", {
                 payload: response,
                 token: token,
@@ -71,9 +71,9 @@ function orderRouter(app) {
             const result = await auth(businessId, token);
             if(!result.success) throw new BadRequest(result.error.message);
             
-            const response = await orderServ.orderById(businessId,productId)
-
+            const response = await orderServ.getOrderById(businessId,productId)
             if(!response.success) throw new BadRequest(response.error.message);
+            
             authResponse(res, 200, true, "Order ok", {
                 payload: response,
                 token: token,
@@ -84,7 +84,6 @@ function orderRouter(app) {
         }
     });
 
-    //!  falta actulizar el estado de la orden el precio si es modificado por el usuario el total de la orden
     router.put("/update/:id", async (req, res, next) => {
         try {
             const businessId = req.headers.businessid;
@@ -94,7 +93,8 @@ function orderRouter(app) {
             const result = await auth(businessId, token);
             if(!result.success) throw new BadRequest(result.error.message);
             
-            const response = await orderServ.orderUpdate(businessId,productId,body)
+            const response = await orderServ.orderByUpdate(businessId,productId,body)
+            if (!response.success) throw new BadRequest(response.error.message);
 
             if(!response.success) throw new BadRequest(response.error.message);
             authResponse(res, 200, true, "Order ok", {
@@ -116,6 +116,8 @@ function orderRouter(app) {
             if(!result.success) throw new BadRequest(result.error.message);
             
             const response = await orderServ.orderDelete(businessId,productId)
+            if(!response.success) throw new BadRequest(response.error.message);
+
             authResponse(res, 200, true, "Order ok", {
                 payload: response,
                 token: token,

@@ -14,8 +14,15 @@ export const createToken = (user) => {
             expiresIn: '1h'
         });
 
-        return token;
+        return {
+            success: true,
+            token
+        }
+
     } catch (error) {
-        console.log(error);
+        return {
+            success: false,
+            error: error
+        }
     }
 };

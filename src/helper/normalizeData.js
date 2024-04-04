@@ -219,6 +219,33 @@ const parseOrderUpdate = async (body, businessId) => {
 
 }
 
+const parserUserAuth = async (body,businessId) => {
+    const requiredFields = ['name','email', 'password', 'lastName', 'phone'];
+    try {
+        // Verificar si todos los campos obligatorios están presentes
+        for (const field of requiredFields) {
+            if (!(field in body)) {
+                throw new BadRequest(`Falta el campo obligatorio: ${field}`);
+            }
+        }
+        const user = {
+            name: body.name,
+            lastName: body.lastName,
+            email: body.email.toLowerCase(),
+            password: body.password,
+            phone: body.phone,
+            businessId: new ObjectId(businessId),
+        }
+        return {
+            success: true,
+            user
+        }
+    } catch (error) {
+        return { success: false, error: error.message };
+    }
+
+}
+
 
 
 
@@ -227,5 +254,6 @@ export {
     parseNewRols,
     parseProduct,
     parseOrder,
-    parseOrderUpdate
+    parseOrderUpdate,
+    parserUserAuth,
 }

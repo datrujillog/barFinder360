@@ -124,7 +124,7 @@ class CategoryService {
             return { success: false, error };
         }
     }
-
+    //#region categoryDelete
     async categoryDelete(businessId, categoryId) {
         try {
             const query = {

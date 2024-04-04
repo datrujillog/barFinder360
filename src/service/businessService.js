@@ -2,23 +2,27 @@
 import { ObjectId } from "bson";
 import db from "../database/db.js";
 import { BadRequest } from "../middleware/errors.js";
+import BusinessRepository from "../repositories/businessRepository.js";
+import UserRepository from "../repositories/userRepository.js";
 
-
-
-class BusinessService {
+class BusinessService extends BusinessRepository {
     constructor() {
-        console.log("BusinessService constructor");
+        super();
+
+        this.userRepository = new UserRepository();
+
     }
 
     async getBusinesses() {
 
         try {
-            const businesses = await db.collection('bar_business').find().toArray();
-            const cout = await db.collection('bar_business').find().count();
+
+            const business = await this.findBusinessById();
+            if (!business.success) throw new BadRequest(business.error.message);
+
             return {
                 success: true,
-                cout,
-                businesses
+                business
             };
         } catch (error) {
             return { success: false, error };
@@ -28,12 +32,9 @@ class BusinessService {
 
     async byEmailBusiness(data) {
         try {
-            const business = await db.collection('bar_business').find({ email: data }).toArray();
 
-            if (business.length === 0) {
-                throw new Error('Business not found');
-                // return { success: false, error: 'Business not found' };
-            }
+            const business = await this.emailByBusiness(email);
+            if (!business.success) throw new BadRequest(business.error.message);
 
             return {
                 success: true,
@@ -47,66 +48,31 @@ class BusinessService {
 
     async businessById(businessId) {
 
-        const dataUser = await db.collection('bar_business').findOne({ _id: new ObjectId(businessId) });
+        const results = await this.findBusinessById(businessId);
+        if (!results.success) throw new BadRequest(results.error.message);
 
-        if (dataUser.length === 0 || dataUser === null) {
-            throw new BadRequest("usuario no existe", "usuarioNoExiste")
-        }
-        let userData = dataUser;
-        // let roles = userData.roles[0];
-        // let users = userData.users[0];
-
-        delete userData['password'];
-        // delete roles['password'];
-        // delete users['password'];
-
-        // console.log(userData);
+        const { business } = results;
+        delete business['password'];
 
         return {
             success: true,
-            business: userData
+            business: business
         };
 
     }
 
 
     async usersByBusiness(businessId, idBusiness) {
+
         try {
-            const users = await db.collection('bar_users').aggregate([
-                {
-                    $match: {
-                        businessId: new ObjectId(businessId),
-                    }
-                },
-                {
-                    $lookup: {
-                        from: "bar_rols",
-                        localField: "roleId",
-                        foreignField: "_id",
-                        as: "role"
-                    }
-                },
-                {
-                    $lookup: {
-                        from: "bar_business",
-                        localField: "businessId",
-                        foreignField: "_id",
-                        as: "business"
-                    }
-                }
-            ]).toArray();
 
-
-            if (users.length === 0) {
-                // return { success: false, messages: 'No users found'};
-                throw new BadRequest('No users found', 'noUsersFound');
-            }
-            for (let i in users) {
-                delete users[i].password;
-            }
-
+            const results = await this.userRepository.findUserByBusiness(businessId);
+            if (!results.success) throw new BadRequest(results.error.message);
+            
+            const { users, count } = results;
             return {
                 success: true,
+                count,
                 users
             };
 
