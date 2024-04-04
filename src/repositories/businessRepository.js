@@ -5,12 +5,11 @@ import BusinessModel from "../database/db.js";
 
 
 
-class businnessRepository {
+class BusinessRepository {
     #businessModel;
     constructor() {
         this.#businessModel = BusinessModel;
     }
-    //TODO : iNMPLMENTAR METODOS DE REPORITORIO PARA BUSINESS
 
     async createBusiness(data) {
 
@@ -42,11 +41,11 @@ class businnessRepository {
             const businesses = await this.#businessModel.collection('bar_business').find().toArray();
             if (!businesses) throw new BadRequest("Business not found");
 
-            const cout = await this.#businessModel.collection('bar_business').find().count();
+            const count = await this.#businessModel.collection('bar_business').find().count();
 
             return {
                 success: true,
-                cout,
+                count,
                 businesses
             };
 
@@ -57,9 +56,47 @@ class businnessRepository {
         }
     }
 
+    async emailByBusiness(email) {
+        try {
 
+            const business = await db.collection('bar_business').find({ email: email }).toArray();
+
+            if (business.length === 0) {
+                throw new BadRequest('Business not found');
+            }
+
+            return {
+                success: true,
+                business
+            }
+
+        } catch (error) {
+            return { success: false, error };
+        }
+    }
+
+    async findBusinessById(businessId) {
+
+        try {
+
+            const business = await this.#businessModel.collection('bar_business').findOne({ _id: new ObjectId(businessId) });
+
+            if (business.length === 0 || business === null) {
+                throw new BadRequest("Usuario no existe", "usuarioNoExiste")
+            }
+
+            return {
+                success: true,
+                business
+            };
+
+        } catch (error) {
+            return { success: false, error };
+
+        }
+    }
 
 
 }
 
-export default businnessRepository;
+export default BusinessRepository;
