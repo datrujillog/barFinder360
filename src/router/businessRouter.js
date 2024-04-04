@@ -77,9 +77,10 @@ function businessRouter(app) {
             const response = await businessServ.usersByBusiness(businessId, idBusiness);
             if (!response.success) throw new BadRequest(response.error.message);
 
-            const { users } = response;
+            const { users,count } = response;
             authResponse(res, 200, true, "Business user ok", {
                 payload: users,
+                count: count,
                 token: token,
             });
 
