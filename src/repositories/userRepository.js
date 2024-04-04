@@ -94,6 +94,57 @@ class UserRepository {
 
         }
     }
+
+    async findUserByBusiness(businessId) {
+
+        try {
+
+            const users = await this.#userModel.collection('bar_users').aggregate([
+                {
+                    $match: {
+                        businessId: new ObjectId(businessId),
+                    }
+                },
+                {
+                    $lookup: {
+                        from: "bar_rols",
+                        localField: "roleId",
+                        foreignField: "_id",
+                        as: "role"
+                    }
+                },
+                {
+                    $lookup: {
+                        from: "bar_business",
+                        localField: "businessId",
+                        foreignField: "_id",
+                        as: "business"
+                    }
+                }
+            ]).toArray();
+
+
+            if (users.length === 0) {
+                // return { success: false, messages: 'No users found'};
+                throw new BadRequest('No users found', 'noUsersFound');
+            }
+            for (let i in users) {
+                delete users[i].password;
+            }
+
+            const count = await this.#userModel.collection('bar_users').find({ businessId: new ObjectId(businessId) }).count();
+
+            return {
+                success: true,
+                count,
+                users
+            }
+
+        } catch (error) {
+            return { success: false, error };
+
+        }
+    }
 }
 
 export default UserRepository;
