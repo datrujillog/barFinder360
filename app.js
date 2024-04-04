@@ -28,7 +28,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true })); 
 app.use(cookie());
 
-//utilizar rutas
+//# utilizar rutas
 Auth(app);
 Business(app);
 User(app);
@@ -38,7 +38,7 @@ Order(app);
 Category(app);
 Product(app);
 
-// ! configurando el swagger hay un error
+
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 

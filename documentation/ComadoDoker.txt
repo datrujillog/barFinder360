@@ -1,0 +1,42 @@
+
+
+# --- CREAR UNA IMAGEN DOCKER
+    # docker build -t barfinder360 .
+    
+    # --- ENTONCES SE CREARÁ UNA IMAGEN CON EL NOMBRE barfinder360
+    # Y AHÍ PUEDES VERIFICAR QUE SE CREÓ LA IMAGEN CON EL COMANDO
+
+--- VERIFICAR QUE SE CREÓ LA IMAGEN
+    # docker images
+
+--- EJECUTAR UNA IMAGEN DOCKER
+    # docker run barfinder360
+
+    -- EJECUTAR UNA IMAGEN DOCKER Y QUE SE PUEDA ACCEDER A LA TERMINAL
+    # docker run -it barfinder360 /bin/bash
+
+    -- EJECUTAR UNA IMAGEN DOCKER Y QUE SE ELIMINE CUANDO SE APAGUE EL CONTENEDOR
+    # docker run --rm barfinder360
+
+--- APAGAR TODOS LOS CONTENEDORES
+    # docker stop $(docker ps -a -q)
+
+    --APAGAR UN CONTENEDOR
+    # docker stop CONTAINER_ID
+    # docker stop CONTAINER_ID
+
+
+
+--- ELIMINAR TODOS
+    # docker rm $(docker ps -a -q)
+
+    --ELIMINAR UN CONTENEDOR
+    # docker rm CONTAINER_ID
+
+
+
+
+
+
+--- EJECUTAR UNA IMAGEN DOCKER Y QUE SE ELIMINE CUANDO SE APAGUE EL CONTENEDOR Y QUE SE PUEDA ACCEDER A LA TERMINAL
+    # docker run -it --rm barfinder360 /bin/bash
