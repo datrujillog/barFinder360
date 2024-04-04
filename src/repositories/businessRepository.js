@@ -56,14 +56,6 @@ class BusinessRepository {
         }
     }
 
-
-
-
-
-
-
-    
-
     async emailByBusiness(email) {
         try {
 
@@ -82,29 +74,6 @@ class BusinessRepository {
             return { success: false, error };
         }
     }
-
-    async findBusinessById(businessId) {
-
-        try {
-
-            const business = await this.#businessModel.collection('bar_business').findOne({ _id: new ObjectId(businessId) });
-
-            if (business.length === 0 || business === null) {
-                throw new BadRequest("Usuario no existe", "usuarioNoExiste")
-            }
-
-            return {
-                success: true,
-                business
-            };
-
-        } catch (error) {
-            return { success: false, error };
-
-        }
-    }
-
-
 }
 
 export default BusinessRepository;
