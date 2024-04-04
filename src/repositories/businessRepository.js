@@ -56,6 +56,14 @@ class BusinessRepository {
         }
     }
 
+
+
+
+
+
+
+    
+
     async emailByBusiness(email) {
         try {
 

@@ -54,7 +54,7 @@ class BusinessService extends BusinessRepository {
 
         return {
             success: true,
-            business: userData
+            business: business
         };
 
     }
