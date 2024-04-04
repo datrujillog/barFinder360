@@ -2,23 +2,27 @@
 import { ObjectId } from "bson";
 import db from "../database/db.js";
 import { BadRequest } from "../middleware/errors.js";
+import businnessRepository from "../repositories/businessRepository.js";
 
 
-
-class BusinessService {
+class BusinessService extends businnessRepository {
     constructor() {
-        console.log("BusinessService constructor");
+        super();
+
     }
 
     async getBusinesses() {
 
         try {
-            const businesses = await db.collection('bar_business').find().toArray();
-            const cout = await db.collection('bar_business').find().count();
+
+            const business = await this.findBusinessById();
+            if (!business.success) throw new BadRequest(business.error.message);
+            // const businesses = await db.collection('bar_business').find().toArray();
+            // const cout = await db.collection('bar_business').find().count();
+
             return {
                 success: true,
-                cout,
-                businesses
+                business
             };
         } catch (error) {
             return { success: false, error };
