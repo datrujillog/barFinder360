@@ -42,7 +42,7 @@ Product(app);
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 
 app.get('/', (req, res) => {
-  res.json(<h1>Esta es la aplicacion de BarFinder360 un aplicativo de bares</h1>);
+  res.send('<h1>Esta es la aplicacion de BarFinder360 un aplicativo de bares Diego xfcg Trujillo Galeano  que haces </h1>');
 });
 
 
