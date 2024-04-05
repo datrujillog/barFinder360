@@ -82,3 +82,14 @@
     # docker build . -t barfinder360
 
 --- docker build . -t barfinder360
+
+
+-- SUBIR IMAGEN A DOCKER HUB
+    # docker login
+    
+    --- CONSTRUIR IMAGEN CON ETIQUETA PARA SUBIR A DOCKER HUB
+    # docker build -t yego0210/barfinder360:latest .
+
+    --- SUBIR IMAGEN A DOCKER HUB
+    # docker push yego0210/barfinder360:latest
+
