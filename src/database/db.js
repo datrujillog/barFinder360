@@ -16,7 +16,7 @@ async function main() {
 
         const collection = db.collection('example');
         // agregar documanto ala collecion 
-        // const result = await collection.insertOne({ name: 'Example' });
+        const result = await collection.insertOne({ name: 'Example' });
         // console.log('result', result);
 
         return db;
