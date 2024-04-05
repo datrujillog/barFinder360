@@ -15,9 +15,11 @@ async function main() {
         const db = client.db(dbName);
 
         const collection = db.collection('example');
-        // agregar documanto ala collecion 
         const result = await collection.insertOne({ name: 'Example' });
-        // console.log('result', result);
+
+        console.log('Connected to the database =>>>', db.databaseName);
+        console.log();
+        console.log('Conexion establecida en el host:', db.client.s.url);
 
         return db;
 
