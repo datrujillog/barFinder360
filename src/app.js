@@ -4,19 +4,19 @@ import morgan from "morgan";
 import cookie from "cookie-parser";
 import swaggerUi from 'swagger-ui-express';
 import swaggerJsdoc from 'swagger-jsdoc';
-import swaggerDocument from "./documentation/swagger.js";
+import swaggerDocument from "../documentation/swagger.js";
 
 
 
 //importar las rutas 
-import Auth from "./src/router/authRouter.js";
-import Business from "./src/router/businessRouter.js";
-import User from "./src/router/userRouter.js";
-import Rol from "./src/router/roleRouter.js";
-import Table from "./src/router/tableRouter.js";
-import Order from "./src/router/orderRouter.js";
-import Category from "./src/router/categoryRouter.js";
-import Product from "./src/router/productRouter.js";
+import Auth from "./router/authRouter.js";
+import Business from "./router/businessRouter.js";
+import User from "./router/userRouter.js";
+import Rol from "./router/roleRouter.js";
+import Table from "./router/tableRouter.js";
+import Order from "./router/orderRouter.js";
+import Category from "./router/categoryRouter.js";
+import Product from "./router/productRouter.js";
 
 
 

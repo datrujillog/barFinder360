@@ -1,12 +1,12 @@
 FROM node:latest
 
-WORKDIR /user/src/app
+WORKDIR /app
 
-COPY package*.json ./
+COPY package*.json .
 
 RUN npm install
 
-COPY . .
+COPY /src /src
 
 RUN npm rebuild bcrypt --build-from-source
 
