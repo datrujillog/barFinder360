@@ -74,3 +74,11 @@
 
 --- ASIGNAR VOLUMEN
     # docker run -d -p 27017:27017 --name mongodb -v mongodbdata:/data/db mongo
+
+--- VER VOLUMENES
+    # docker volume ls
+
+--- CREAR UNA IMAGEN DE DOCKER ASIGNENDO UN VOLUMEN
+    # docker build . -t barfinder360
+
+--- docker build . -t barfinder360
