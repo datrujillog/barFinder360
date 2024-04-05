@@ -3,7 +3,6 @@ import express from "express";
 import morgan from "morgan";
 import cookie from "cookie-parser";
 import swaggerUi from 'swagger-ui-express';
-import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerDocument from "../documentation/swagger.js";
 
 
