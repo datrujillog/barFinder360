@@ -26,17 +26,51 @@
     # docker stop CONTAINER_ID
 
 
-
+ 
 --- ELIMINAR TODOS
     # docker rm $(docker ps -a -q)
 
     --ELIMINAR UN CONTENEDOR
     # docker rm CONTAINER_ID
 
-
-
-
-
+--- Esponer puerto local de una imagen docker 
+    # docker run -p 8080:8080 barfinder360
+    -- Se puede cancelar la consola con ctrl + c
+    # docker run --init --rm -p 5000:5000 barfinder360
 
 --- EJECUTAR UNA IMAGEN DOCKER Y QUE SE ELIMINE CUANDO SE APAGUE EL CONTENEDOR Y QUE SE PUEDA ACCEDER A LA TERMINAL
     # docker run -it --rm barfinder360 /bin/bash
+
+
+--- Ejecutar imagen mongo en docker
+    # docker run -d -p 27017:27017 --name mongodb mongo
+
+--- Ejecutar imagen mongo en docker y que se pueda acceder a la terminal
+    # docker run -it --rm -p 27017:27017 --name mongodb mongo /bin/bash
+
+--- Ejecutar imagen mongo en docker y que se pueda acceder a la terminal
+    # docker run -it --rm -p 27017:27017 --name mongodb mongo /bin/bash
+
+--- VER CONTENEDORES EN EJECUCIÓN
+    # docker ps
+
+--- VER CONTENEDORES DETENIDOS
+    # docker ps -a
+
+--- ver conainer id
+    # docker ps -a -q
+    
+--- Ver logs de un contenedor
+    # docker logs CONTAINER_ID
+
+--- EJECUTAR UN CONTENEDOR EN ESPECIFICO CON EL NOMBRE 
+    # docker exec -it CONTAINER_NAME /bin/bash
+
+--- CONECTARME CON MONGO Y CREAR UNA BASE DE DATOS
+    # docker exec -it mongodb /bin/bash
+
+--- CREAR VOLUMEN EN DOCKER
+    # docker volume create mongodbdata
+
+--- ASIGNAR VOLUMEN
+    # docker run -d -p 27017:27017 --name mongodb -v mongodbdata:/data/db mongo
