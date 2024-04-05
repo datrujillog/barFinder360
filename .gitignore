@@ -126,6 +126,7 @@ dist
 .yarn/install-state.gz
 .pnp.*
 data
+dbdata
 dbdata/_mdb_catalog.wt
 dbdata/collection-0--3939064888209759160.wt
 dbdata/collection-2--3939064888209759160.wt
