@@ -17,16 +17,19 @@ services:
     container_name: app
     ports:
       - "5000:5000"
+    # command: npm run dev
     depends_on:                   # depende de mongodb para que se ejecute
       - mongodb
     networks:
       - mongodb      # se conecta a la red mongodb
     volumes:
-      - ./src:/app/src        
+      - ./src:/app/src
 
 networks:
   mongodb:
     driver: bridge
 
-# volumes:
-#   mongodb_data:
+volumes:
+  mongodb_data:
+
+  
