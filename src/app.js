@@ -3,7 +3,7 @@ import express from "express";
 import morgan from "morgan";
 import cookie from "cookie-parser";
 import swaggerUi from 'swagger-ui-express';
-import swaggerDocument from "../documentation/swagger.js";
+import swaggerDocument from "./helper/swagger/swagger.js";
 
 
 
@@ -41,6 +41,9 @@ Product(app);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 
+app.get('/', (req, res) => {
+  res.json(<h1>Esta es la aplicacion de BarFinder360 un aplicativo de bares</h1>);
+});
 
 
 //middleware de errores
