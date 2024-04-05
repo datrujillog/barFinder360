@@ -21,14 +21,14 @@ function businessRouter(app) {
     app.use("/api/v1/role", router);
 
     router.post("/create", async (req, res) => {
-        const businessId  = req.headers.businessid; 
+        const businessId = req.headers.businessid;
         const token = req.cookies.token;
         const dataToken = await auth(token)
         try {
-            if(dataToken.businessId !== businessId) throw new BadRequest('Error de autenticacion')            
+            if (dataToken.businessId !== businessId) throw new BadRequest('Error de autenticacion')
         } catch (error) {
             return errorResponse(res, error.message)
-            
+
         }
         const response = await roleServ.createRole(req.body, token);
         response.success
@@ -38,17 +38,17 @@ function businessRouter(app) {
 
     router.post("/plantillas", async (req, res) => {
         const data = req.body;
-        let rolesIds= [];
-        
+        let rolesIds = [];
+
         const response = await roleServ.createPlantillas(data)
         response.success
             ? Responsee(res, 201, true, "Rol actualizado correctamente", { user: response })
             : errorResponse(res, response.error.message);
-    
-    });
 
+    });
+    //! Revisar este codigo da error al crear el usuario
     router.post("/createRoles", async (req, res) => {
-        const businessId  = req.headers.businessid; 
+        const businessId = req.headers.businessid;
         const body = req.body;
         const token = req.cookies.token;
         const dataToken = await extractDataFromToken(token)
@@ -56,9 +56,9 @@ function businessRouter(app) {
         //     if(dataToken.businessId !== businessId) throw new BadRequest('Error de autenticacion')            
         // } catch (error) {
         //     return errorResponse(res, error.message)
-             
+
         // } 
-        if(body === null) throw new BadRequest('Error de autenticacion')
+        if (body === null) throw new BadRequest('Error de autenticacion')
         const response = await roleServ.createRoles(body);
         response.success
             ? Responsee(res, 201, true, "Rol creado correctamente", { user: response.user })
@@ -66,6 +66,6 @@ function businessRouter(app) {
     });
 
 
-}  
+}
 
 export default businessRouter;
