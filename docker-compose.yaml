@@ -11,15 +11,15 @@ services:
       - mongodb_data:/data/db
     networks:
       - mongodb
-  node:
+  app:
     build: .
-    container_name: node
+    container_name: app
     ports:
       - "5000:5000"
-    depends_on:
+    depends_on:                   # depende de mongodb para que se ejecute
       - mongodb
     networks:
-      - mongodb
+      - mongodb                 # se conecta a la red mongodb
 
 networks:
   mongodb:
