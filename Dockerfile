@@ -12,4 +12,4 @@ RUN npm rebuild bcrypt --build-from-source
 
 EXPOSE 5000
 
-CMD ["npm","run", "dev"]
+CMD ["npm","run", "dev"] 
